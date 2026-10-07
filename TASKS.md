@@ -4,12 +4,10 @@ Statuses: `TODO` / `IN PROGRESS (surface, date)` / `BLOCKED (reason)` / `DONE (d
 
 ## Phase 0 — verify & provision
 
-**T1 · Verify Unsloth trains LFM2.5-2.6B** — `IN PROGRESS (Colab, 2026-10-07)`
-Colab (any GPU). Load `LiquidAI/LFM2.5-2.6B` with `FastLanguageModel.from_pretrained(max_seq_length=4096)`, attach the §3 LoRA config from `plan.md`, run a 10-sample smoke train from a tiny in-notebook dataset, then measure: tok/s, peak VRAM, and the Colab CU meter delta per hour. Record all three in `runs/p0-1-verify-unsloth-2.6b/`.
-- DoD: smoke train completes; measured numbers recorded; go/no-go verdict written in `notes.md`.
-- Staged: Run contract files initialized at `runs/p0-1-verify-unsloth-2.6b/` (`run.json`, `metrics.jsonl`, `notes.md`); notebook `notebooks/sft_lfm25_2_6b_v1.ipynb` ready for GPU execution.
-- Fallback ladder (decision D1): (a) Unsloth errors on `Lfm2ForCausalLM` at 2.6B → retry with Liquid cookbook TRL path ([sft_with_unsloth.ipynb](https://github.com/Liquid4All/cookbook/blob/main/finetuning/notebooks/sft_with_unsloth.ipynb) uses 1.2B — adapt model id; TRL notebook [here](https://github.com/Liquid4All/cookbook)); (b) still failing → switch target to `LFM2.5-VL-3B` (official Unsloth support, vision frozen) and record the switch in `plan.md` change log.
-- Sources: [Unsloth LFM2.5 tutorial](https://unsloth.ai/docs/models/tutorials/lfm2.5), [cookbook script](https://github.com/Liquid4All/cookbook/blob/main/finetuning/scripts/unsloth-sft-lfm2.5.py).
+**T1 · Verify Unsloth trains LFM2.5-2.6B** — `DONE (2026-10-07)`
+Colab Tesla T4. Loaded `LiquidAI/LFM2.5-2.6B` with `FastLanguageModel.from_pretrained(max_seq_length=4096)`, attached 16-bit LoRA config (20,135,936 trainable params / 0.741%), ran 10-step smoke train from in-notebook dataset.
+- DoD: smoke train completed in 62.86s; peak VRAM 5.35 GB; 0.20 CU burned (0.67 CU/h); monotonic loss convergence (3.41 → 1.06); verdict GO recorded in `runs/p0-1-verify-unsloth-2.6b/notes.md`. Fallback ladder not needed.
+- Source: [W&B run record](https://wandb.ai/navin_hill/huggingface/runs/huxz5tt6).
 
 **T2 · Pin versions + notebook template** — `DONE (2026-10-07)` (pairs with T1)
 Created `notebooks/sft_lfm25_2_6b_v1.ipynb` from the official notebook/script: pinned installs (`unsloth` latest, `transformers==4.57.6`, `trl==0.22.2 --no-deps`), Colab Secret usage (`HF_TOKEN` via `userdata`), the full §3 config, checkpoint-to-HF-Hub every 30–60 min, CU-meter logging helper, smoke mode flag.

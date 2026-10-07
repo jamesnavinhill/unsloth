@@ -1,1 +1,4 @@
 {"t": "2026-10-07T19:00:00Z", "kind": "init", "value": {"run_id": "p0-1-verify-unsloth-2.6b", "task": "T1", "base_model": "LiquidAI/LFM2.5-2.6B", "smoke_samples": 10}}
+{"t": "2026-10-07T23:24:58Z", "kind": "train_loss", "value": {"final_loss": 2.3675, "total_steps": 10, "duration_s": 62.86, "peak_vram_gb": 5.35}}
+{"t": "2026-10-07T23:25:00Z", "kind": "cu_meter", "value": {"initial_cu": 200.0, "final_cu": 199.8, "delta_cu": 0.20, "burn_rate_cu_h": 0.67}}
+{"t": "2026-10-07T23:25:05Z", "kind": "verdict", "value": {"status": "completed", "verdict": "PASS"}}

@@ -1,0 +1,355 @@
+Collecting unsloth@ git+https://github.com/unslothai/unsloth.git (from unsloth[colab-new]@ git+https://github.com/unslothai/unsloth.git)
+  Cloning https://github.com/unslothai/unsloth.git to /tmp/pip-install-9vdzf2e_/unsloth_9bb926383f5f45f89bbda3e896854e97
+  Running command git clone --filter=blob:none --quiet https://github.com/unslothai/unsloth.git /tmp/pip-install-9vdzf2e_/unsloth_9bb926383f5f45f89bbda3e896854e97
+  Resolved https://github.com/unslothai/unsloth.git to commit 660bcbad91f0541a8dbc7741ea67d7df0629eea3
+  Installing build dependencies ... done
+  Getting requirements to build wheel ... done
+  Preparing metadata (pyproject.toml) ... done
+Building wheels for collected packages: unsloth
+  Building wheel for unsloth (pyproject.toml) ... done
+  Created wheel for unsloth: filename=unsloth-2026.10.2-py3-none-any.whl size=11861777 sha256=3d197079286c0d41c6882dae15c87a09cd7757cc9e8afb63a6a6e3484ab6c517
+  Stored in directory: /tmp/pip-ephem-wheel-cache-8zwlkxnp/wheels/d5/36/1d/4e65996c5b80c84a5ac1b0ba10718bdc155f8dd04352746a8f
+Successfully built unsloth
+Installing collected packages: unsloth
+Successfully installed unsloth-2026.10.2
+Collecting trl==0.22.2
+  Downloading trl-0.22.2-py3-none-any.whl.metadata (11 kB)
+Downloading trl-0.22.2-py3-none-any.whl (544 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 544.8/544.8 kB 13.8 MB/s eta 0:00:00
+Installing collected packages: trl
+Successfully installed trl-0.22.2
+Collecting transformers==4.57.6
+  Downloading transformers-4.57.6-py3-none-any.whl.metadata (43 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.0/44.0 kB 3.1 MB/s eta 0:00:00
+Requirement already satisfied: filelock in /usr/local/lib/python3.13/dist-packages (from transformers==4.57.6) (4.0.7)
+Collecting huggingface-hub<1.0,>=0.34.0 (from transformers==4.57.6)
+  Downloading huggingface_hub-0.36.2-py3-none-any.whl.metadata (15 kB)
+Requirement already satisfied: numpy>=1.17 in /usr/local/lib/python3.13/dist-packages (from transformers==4.57.6) (2.1.3)
+Requirement already satisfied: packaging>=20.0 in /usr/local/lib/python3.13/dist-packages (from transformers==4.57.6) (26.3)
+Requirement already satisfied: pyyaml>=5.1 in /usr/local/lib/python3.13/dist-packages (from transformers==4.57.6) (6.0.3)
+Requirement already satisfied: regex!=2019.12.17 in /usr/local/lib/python3.13/dist-packages (from transformers==4.57.6) (2025.11.3)
+Requirement already satisfied: requests in /usr/local/lib/python3.13/dist-packages (from transformers==4.57.6) (2.32.4)
+Collecting tokenizers<=0.23.0,>=0.22.0 (from transformers==4.57.6)
+  Downloading tokenizers-0.22.2-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.3 kB)
+Requirement already satisfied: safetensors>=0.4.3 in /usr/local/lib/python3.13/dist-packages (from transformers==4.57.6) (0.8.0)
+Requirement already satisfied: tqdm>=4.27 in /usr/local/lib/python3.13/dist-packages (from transformers==4.57.6) (4.67.3)
+Requirement already satisfied: fsspec>=2023.5.0 in /usr/local/lib/python3.13/dist-packages (from huggingface-hub<1.0,>=0.34.0->transformers==4.57.6) (2025.12.0)
+Requirement already satisfied: hf-xet<2.0.0,>=1.1.3 in /usr/local/lib/python3.13/dist-packages (from huggingface-hub<1.0,>=0.34.0->transformers==4.57.6) (1.6.0)
+Requirement already satisfied: typing-extensions>=3.7.4.3 in /usr/local/lib/python3.13/dist-packages (from huggingface-hub<1.0,>=0.34.0->transformers==4.57.6) (4.16.0)
+Requirement already satisfied: charset_normalizer<4,>=2 in /usr/local/lib/python3.13/dist-packages (from requests->transformers==4.57.6) (3.4.9)
+Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.13/dist-packages (from requests->transformers==4.57.6) (3.20)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.13/dist-packages (from requests->transformers==4.57.6) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.13/dist-packages (from requests->transformers==4.57.6) (2026.7.22)
+Downloading transformers-4.57.6-py3-none-any.whl (12.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.0/12.0 MB 86.2 MB/s eta 0:00:00
+Downloading huggingface_hub-0.36.2-py3-none-any.whl (566 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 566.4/566.4 kB 34.5 MB/s eta 0:00:00
+Downloading tokenizers-0.22.2-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.3/3.3 MB 93.3 MB/s eta 0:00:00
+Installing collected packages: huggingface-hub, tokenizers, transformers
+  Attempting uninstall: huggingface-hub
+    Found existing installation: huggingface_hub 1.33.0
+    Uninstalling huggingface_hub-1.33.0:
+      Successfully uninstalled huggingface_hub-1.33.0
+  Attempting uninstall: tokenizers
+    Found existing installation: tokenizers 0.23.2
+    Uninstalling tokenizers-0.23.2:
+      Successfully uninstalled tokenizers-0.23.2
+  Attempting uninstall: transformers
+    Found existing installation: transformers 5.18.0
+    Uninstalling transformers-5.18.0:
+      Successfully uninstalled transformers-5.18.0
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+unsloth 2026.10.2 requires structlog>=24.1.0, which is not installed.
+gradio 6.29.0 requires huggingface-hub<3.0,>=1.16.0, but you have huggingface-hub 0.36.2 which is incompatible.
+diffusers 0.40.0 requires huggingface-hub<2.0,>=1.23.0, but you have huggingface-hub 0.36.2 which is incompatible.
+Successfully installed huggingface-hub-0.36.2 tokenizers-0.22.2 transformers-4.57.6
+Collecting bitsandbytes
+  Downloading bitsandbytes-0.50.2-py3-none-manylinux_2_24_x86_64.whl.metadata (10 kB)
+Requirement already satisfied: accelerate in /usr/local/lib/python3.13/dist-packages (1.15.0)
+Requirement already satisfied: datasets in /usr/local/lib/python3.13/dist-packages (4.8.5)
+Requirement already satisfied: peft in /usr/local/lib/python3.13/dist-packages (0.21.1)
+Requirement already satisfied: sentencepiece in /usr/local/lib/python3.13/dist-packages (0.2.2)
+Requirement already satisfied: protobuf in /usr/local/lib/python3.13/dist-packages (6.33.6)
+Requirement already satisfied: wandb in /usr/local/lib/python3.13/dist-packages (0.28.1)
+Requirement already satisfied: torch<3,>=2.4 in /usr/local/lib/python3.13/dist-packages (from bitsandbytes) (2.11.0+cu130)
+Requirement already satisfied: numpy>=1.17 in /usr/local/lib/python3.13/dist-packages (from bitsandbytes) (2.1.3)
+Requirement already satisfied: packaging>=20.9 in /usr/local/lib/python3.13/dist-packages (from bitsandbytes) (26.3)
+Requirement already satisfied: psutil in /usr/local/lib/python3.13/dist-packages (from accelerate) (5.9.5)
+Requirement already satisfied: pyyaml in /usr/local/lib/python3.13/dist-packages (from accelerate) (6.0.3)
+Requirement already satisfied: huggingface_hub>=0.21.0 in /usr/local/lib/python3.13/dist-packages (from accelerate) (0.36.2)
+Requirement already satisfied: safetensors>=0.4.3 in /usr/local/lib/python3.13/dist-packages (from accelerate) (0.8.0)
+Requirement already satisfied: filelock in /usr/local/lib/python3.13/dist-packages (from datasets) (4.0.7)
+Requirement already satisfied: pyarrow>=21.0.0 in /usr/local/lib/python3.13/dist-packages (from datasets) (23.0.1)
+Requirement already satisfied: dill<0.4.2,>=0.3.0 in /usr/local/lib/python3.13/dist-packages (from datasets) (0.4.1)
+Requirement already satisfied: pandas in /usr/local/lib/python3.13/dist-packages (from datasets) (2.2.3)
+Requirement already satisfied: requests>=2.32.2 in /usr/local/lib/python3.13/dist-packages (from datasets) (2.32.4)
+Requirement already satisfied: httpx<1.0.0 in /usr/local/lib/python3.13/dist-packages (from datasets) (0.28.1)
+Requirement already satisfied: tqdm>=4.66.3 in /usr/local/lib/python3.13/dist-packages (from datasets) (4.67.3)
+Requirement already satisfied: xxhash in /usr/local/lib/python3.13/dist-packages (from datasets) (4.0.1)
+Requirement already satisfied: multiprocess<0.70.20 in /usr/local/lib/python3.13/dist-packages (from datasets) (0.70.19)
+Requirement already satisfied: fsspec<=2026.2.0,>=2023.1.0 in /usr/local/lib/python3.13/dist-packages (from fsspec[http]<=2026.2.0,>=2023.1.0->datasets) (2025.12.0)
+Requirement already satisfied: transformers in /usr/local/lib/python3.13/dist-packages (from peft) (4.57.6)
+Requirement already satisfied: click>=8.2.0 in /usr/local/lib/python3.13/dist-packages (from wandb) (8.5.0)
+Requirement already satisfied: platformdirs in /usr/local/lib/python3.13/dist-packages (from wandb) (4.12.2)
+Requirement already satisfied: pydantic<3,>=2.6 in /usr/local/lib/python3.13/dist-packages (from wandb) (2.13.5)
+Requirement already satisfied: sentry-sdk>=2.0.0 in /usr/local/lib/python3.13/dist-packages (from wandb) (2.71.0)
+Requirement already satisfied: typing-extensions<5,>=4.8 in /usr/local/lib/python3.13/dist-packages (from wandb) (4.16.0)
+Requirement already satisfied: aiohttp!=4.0.0a0,!=4.0.0a1 in /usr/local/lib/python3.13/dist-packages (from fsspec[http]<=2026.2.0,>=2023.1.0->datasets) (3.14.3)
+Requirement already satisfied: anyio in /usr/local/lib/python3.13/dist-packages (from httpx<1.0.0->datasets) (4.15.1)
+Requirement already satisfied: certifi in /usr/local/lib/python3.13/dist-packages (from httpx<1.0.0->datasets) (2026.7.22)
+Requirement already satisfied: httpcore==1.* in /usr/local/lib/python3.13/dist-packages (from httpx<1.0.0->datasets) (1.0.9)
+Requirement already satisfied: idna in /usr/local/lib/python3.13/dist-packages (from httpx<1.0.0->datasets) (3.20)
+Requirement already satisfied: h11>=0.16 in /usr/local/lib/python3.13/dist-packages (from httpcore==1.*->httpx<1.0.0->datasets) (0.16.0)
+Requirement already satisfied: hf-xet<2.0.0,>=1.1.3 in /usr/local/lib/python3.13/dist-packages (from huggingface_hub>=0.21.0->accelerate) (1.6.0)
+Requirement already satisfied: annotated-types>=0.6.0 in /usr/local/lib/python3.13/dist-packages (from pydantic<3,>=2.6->wandb) (0.8.0)
+Requirement already satisfied: pydantic-core==2.46.5 in /usr/local/lib/python3.13/dist-packages (from pydantic<3,>=2.6->wandb) (2.46.5)
+Requirement already satisfied: typing-inspection>=0.4.2 in /usr/local/lib/python3.13/dist-packages (from pydantic<3,>=2.6->wandb) (0.4.4)
+Requirement already satisfied: charset_normalizer<4,>=2 in /usr/local/lib/python3.13/dist-packages (from requests>=2.32.2->datasets) (3.4.9)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.13/dist-packages (from requests>=2.32.2->datasets) (2.5.0)
+Requirement already satisfied: setuptools<82 in /usr/local/lib/python3.13/dist-packages (from torch<3,>=2.4->bitsandbytes) (80.10.2)
+Requirement already satisfied: sympy>=1.13.3 in /usr/local/lib/python3.13/dist-packages (from torch<3,>=2.4->bitsandbytes) (1.14.0)
+Requirement already satisfied: networkx>=2.5.1 in /usr/local/lib/python3.13/dist-packages (from torch<3,>=2.4->bitsandbytes) (3.7)
+Requirement already satisfied: jinja2 in /usr/local/lib/python3.13/dist-packages (from torch<3,>=2.4->bitsandbytes) (3.1.6)
+Requirement already satisfied: cuda-toolkit==13.0.2 in /usr/local/lib/python3.13/dist-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.2; platform_system == "Linux"->torch<3,>=2.4->bitsandbytes) (13.0.2)
+Requirement already satisfied: cuda-bindings<14,>=13.0.3 in /usr/local/lib/python3.13/dist-packages (from torch<3,>=2.4->bitsandbytes) (13.0.3)
+Requirement already satisfied: nvidia-cudnn-cu13==9.19.0.56 in /usr/local/lib/python3.13/dist-packages (from torch<3,>=2.4->bitsandbytes) (9.19.0.56)
+Requirement already satisfied: nvidia-cusparselt-cu13==0.8.0 in /usr/local/lib/python3.13/dist-packages (from torch<3,>=2.4->bitsandbytes) (0.8.0)
+Requirement already satisfied: nvidia-nccl-cu13==2.28.9 in /usr/local/lib/python3.13/dist-packages (from torch<3,>=2.4->bitsandbytes) (2.28.9)
+Requirement already satisfied: nvidia-nvshmem-cu13==3.4.5 in /usr/local/lib/python3.13/dist-packages (from torch<3,>=2.4->bitsandbytes) (3.4.5)
+Requirement already satisfied: triton==3.6.0 in /usr/local/lib/python3.13/dist-packages (from torch<3,>=2.4->bitsandbytes) (3.6.0)
+Requirement already satisfied: nvidia-cublas==13.1.0.3.* in /usr/local/lib/python3.13/dist-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.2; platform_system == "Linux"->torch<3,>=2.4->bitsandbytes) (13.1.0.3)
+Requirement already satisfied: nvidia-cuda-runtime==13.0.96.* in /usr/local/lib/python3.13/dist-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.2; platform_system == "Linux"->torch<3,>=2.4->bitsandbytes) (13.0.96)
+Requirement already satisfied: nvidia-cufft==12.0.0.61.* in /usr/local/lib/python3.13/dist-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.2; platform_system == "Linux"->torch<3,>=2.4->bitsandbytes) (12.0.0.61)
+Requirement already satisfied: nvidia-cufile==1.15.1.6.* in /usr/local/lib/python3.13/dist-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.2; platform_system == "Linux"->torch<3,>=2.4->bitsandbytes) (1.15.1.6)
+Requirement already satisfied: nvidia-cuda-cupti==13.0.85.* in /usr/local/lib/python3.13/dist-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.2; platform_system == "Linux"->torch<3,>=2.4->bitsandbytes) (13.0.85)
+Requirement already satisfied: nvidia-curand==10.4.0.35.* in /usr/local/lib/python3.13/dist-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.2; platform_system == "Linux"->torch<3,>=2.4->bitsandbytes) (10.4.0.35)
+Requirement already satisfied: nvidia-cusolver==12.0.4.66.* in /usr/local/lib/python3.13/dist-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.2; platform_system == "Linux"->torch<3,>=2.4->bitsandbytes) (12.0.4.66)
+Requirement already satisfied: nvidia-cusparse==12.6.3.3.* in /usr/local/lib/python3.13/dist-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.2; platform_system == "Linux"->torch<3,>=2.4->bitsandbytes) (12.6.3.3)
+Requirement already satisfied: nvidia-nvjitlink==13.0.88.* in /usr/local/lib/python3.13/dist-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.2; platform_system == "Linux"->torch<3,>=2.4->bitsandbytes) (13.0.88)
+Requirement already satisfied: nvidia-cuda-nvrtc==13.0.88.* in /usr/local/lib/python3.13/dist-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.2; platform_system == "Linux"->torch<3,>=2.4->bitsandbytes) (13.0.88)
+Requirement already satisfied: nvidia-nvtx==13.0.85.* in /usr/local/lib/python3.13/dist-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.2; platform_system == "Linux"->torch<3,>=2.4->bitsandbytes) (13.0.85)
+Requirement already satisfied: python-dateutil>=2.8.2 in /usr/local/lib/python3.13/dist-packages (from pandas->datasets) (2.9.0.post0)
+Requirement already satisfied: pytz>=2020.1 in /usr/local/lib/python3.13/dist-packages (from pandas->datasets) (2025.2)
+Requirement already satisfied: tzdata>=2022.7 in /usr/local/lib/python3.13/dist-packages (from pandas->datasets) (2026.4)
+Requirement already satisfied: regex!=2019.12.17 in /usr/local/lib/python3.13/dist-packages (from transformers->peft) (2025.11.3)
+Requirement already satisfied: tokenizers<=0.23.0,>=0.22.0 in /usr/local/lib/python3.13/dist-packages (from transformers->peft) (0.22.2)
+Requirement already satisfied: aiohappyeyeballs>=2.5.0 in /usr/local/lib/python3.13/dist-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2026.2.0,>=2023.1.0->datasets) (2.7.1)
+Requirement already satisfied: aiosignal>=1.4.0 in /usr/local/lib/python3.13/dist-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2026.2.0,>=2023.1.0->datasets) (1.4.0)
+Requirement already satisfied: attrs>=17.3.0 in /usr/local/lib/python3.13/dist-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2026.2.0,>=2023.1.0->datasets) (26.1.0)
+Requirement already satisfied: frozenlist>=1.1.1 in /usr/local/lib/python3.13/dist-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2026.2.0,>=2023.1.0->datasets) (1.8.0)
+Requirement already satisfied: multidict<7.0,>=4.5 in /usr/local/lib/python3.13/dist-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2026.2.0,>=2023.1.0->datasets) (6.9.1)
+Requirement already satisfied: propcache>=0.2.0 in /usr/local/lib/python3.13/dist-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2026.2.0,>=2023.1.0->datasets) (0.5.4)
+Requirement already satisfied: yarl<2.0,>=1.17.0 in /usr/local/lib/python3.13/dist-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2026.2.0,>=2023.1.0->datasets) (1.25.1)
+Requirement already satisfied: cuda-pathfinder~=1.1 in /usr/local/lib/python3.13/dist-packages (from cuda-bindings<14,>=13.0.3->torch<3,>=2.4->bitsandbytes) (1.8.2)
+Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.13/dist-packages (from python-dateutil>=2.8.2->pandas->datasets) (1.17.0)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /usr/local/lib/python3.13/dist-packages (from sympy>=1.13.3->torch<3,>=2.4->bitsandbytes) (1.3.0)
+Requirement already satisfied: MarkupSafe>=2.0 in /usr/local/lib/python3.13/dist-packages (from jinja2->torch<3,>=2.4->bitsandbytes) (3.0.3)
+Downloading bitsandbytes-0.50.2-py3-none-manylinux_2_24_x86_64.whl (43.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 43.1/43.1 MB 15.8 MB/s eta 0:00:00
+Installing collected packages: bitsandbytes
+Successfully installed bitsandbytes-0.50.2
+PyTorch: 2.11.0+cu130 | CUDA available: True
+Device: Tesla T4 | VRAM: 15.64 GB
+BFloat16 supported: True
+
+
+[PASS] Hugging Face Hub: Authenticated
+/usr/local/lib/python3.13/dist-packages/notebook/notebookapp.py:191: SyntaxWarning: invalid escape sequence '\/'
+  | |_| | '_ \/ _` / _` |  _/ -_)
+wandb: WARNING If you're specifying your api key in code, ensure this code is not shared publicly.
+wandb: WARNING Consider setting the WANDB_API_KEY environment variable, or running `wandb login` from the command line.
+wandb: [wandb.login()] Using explicit session credentials for https://api.wandb.ai.
+wandb: No netrc file found, creating one.
+wandb: Appending key for api.wandb.ai to your netrc file: /root/.netrc
+wandb: Currently logged in as: jamienavinhill (navin_hill) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+[PASS] Weights & Biases: Authenticated
+
+
+[CU Tracker] Started. Initial CU reading: 200.0
+
+
+ Installing unsloth_zoo to satisfy Unsloth requirements...
+🦥 Unsloth: Will patch your computer to enable 2x faster free finetuning.
+🦥 Unsloth Zoo will now patch everything to make training faster!
+Loading LiquidAI/LFM2.5-2.6B with max_seq_length=4096...
+==((====))==  Unsloth 2026.10.2: Fast Lfm2 patching. Transformers: 4.57.6.
+   \\   /|    Tesla T4. Num GPUs = 1. Max memory: 14.563 GB. Platform: Linux.
+O^O/ \_/ \    Torch: 2.11.0+cu130. CUDA: 7.5. CUDA Toolkit: 13.0. Triton: 3.6.0
+\        /    Bfloat16 = FALSE. FA [Xformers = None. FA2 = False]
+ "-____-"     Free license: http://github.com/unslothai/unsloth
+Loading checkpoint shards: 100% 2/2 [00:24<00:00,  9.97s/it][SUCCESS] Primary path: Loaded LiquidAI/LFM2.5-2.6B via Unsloth FastLanguageModel
+
+
+Unsloth: Explicit target_modules are constrained by the finetune_(vision|language|attention|mlp) filters; adapters attach only where both select.
+Unsloth: Dropout = 0 is supported for fast patching. You are using dropout = 0.05.
+Unsloth will patch all other layers, except LoRA matrices, causing a performance hit.
+WARNING:unsloth.import_fixes:Unsloth: Ignoring an unusable torchao so LoRA can still be built (Found an incompatible version of torchao. Found version 0.10.0, but only versions above 0.16.0 are supported). Run `pip install --upgrade torchao` if you need torchao quantization.
+[PASS] LoRA Adapter attached successfully:
+trainable params: 20,135,936 || all params: 2,717,334,528 || trainable%: 0.7410
+
+
+Sample Rendered ChatML Template:
+<|im_start|>system
+You are a professional essayist and blogger crafting natural, engaging, and authentic prose with human cadence.<|im_end|>
+<|im_start|>user
+Rewrite the following text into authentic, human-styled blog:
+
+In today's fast-paced digital...
+
+
+--- SMOKE MODE ACTIVE (10 Samples Across 4 Domains) ---
+Smoke dataset prepared: 10 examples
+
+
+ Unsloth: Tokenizing ["text"] (num_proc=2): 100% 10/10 [00:02<00:00,  6.04 examples/s]Map: 100% 10/10 [00:00<00:00, 414.61 examples/s][PASS] SFTTrainer configured with response-only loss masking and effective batch 16.
+
+
+ 
+Starting training run...
+==((====))==  Unsloth - 2x faster free finetuning | Num GPUs used = 1
+   \\   /|    Num examples = 10 | Num Epochs = 10 | Total steps = 10
+O^O/ \_/ \    Batch size per device = 2 | Gradient accumulation steps = 8
+\        /    Data Parallel GPUs = 1 | Total batch size (2 x 8 x 1) = 16
+ "-____-"     Trainable parameters = 20,135,936 of 2,717,334,528 (0.74% trained)
+Tracking run with wandb version 0.28.1Run data is saved locally in /content/wandb/run-20261007_232355-huxz5tt6Syncing run p0-1-verify-unsloth-2.6b to Weights & Biases (docs) View project at https://wandb.ai/navin_hill/huggingface View run at https://wandb.ai/navin_hill/huggingface/runs/huxz5tt6wandb: Detected [huggingface_hub.inference, openai] in use.
+wandb: Use W&B Weave for improved LLM call tracing. Install Weave with `pip install weave` then add `import weave` to the top of your script.
+wandb: For more information, check out the docs at: https://weave-docs.wandb.ai
+
+    
+      
+      
+      [10/10 00:13, Epoch 10/10]
+    
+    
+  
+ 
+      Step
+      Training Loss
+    
+  
+  
+    
+      1
+      3.416900
+    
+    
+      2
+      3.416900
+    
+    
+      3
+      3.416900
+    
+    
+      4
+      3.416900
+    
+    
+      5
+      2.527200
+    
+    
+      6
+      2.059200
+    
+    
+      7
+      1.706500
+    
+    
+      8
+      1.430500
+    
+    
+      9
+      1.218100
+    
+    
+      10
+      1.065700
+    
+  
+============================================================
+TRAINING RUN COMPLETE
+Duration:         62.86 seconds (1.05 min)
+Total Steps:      10
+Final Train Loss: 2.3675
+Peak VRAM:        5.35 GB
+============================================================
+
+
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+
+--- MODEL COMPLETION VERIFICATION (POST-SMOKE) ---
+
+[BLOG] Input:  In today's fast-paced technological ecosystem, it is vital to remember the importance of mindfulness.
+[BLOG] Output: The user wants me to rewrite a formal, somewhat generic paragraph about mindfulness in technology into something more authentic and human-like - like a real blog post. I need to capture the same core message (mindfulness matters in tech) but make it feel genuine, conversational, and personal.
+
+Key elements to preserve:
+- The tension between fast-paced tech and the need for mindfulness
+- The idea that this isn't just a buzzword but genuinely important
+
+I should avoid:
+- Overly formal language ("it is vital to remember")
+- Generic statements without specific texture or voice
+- Corporate-speak phrasing
+
+Let me write something that feels like
+
+[WEBSITE COPY] Input:  Our transformative enterprise synergy platform seamlessly optimizes workflow throughput.
+[WEBSITE COPY] Output: The user wants me to rewrite a corporate-sounding sentence into something more authentic and human-style. The original is very stiff: "Our transformative enterprise synergy platform seamlessly optimizes workflow throughput."
+
+I need to make this sound like real people talking about their work - less jargon, more concrete language, maybe some personality. Let me think about what would be authentic here.
+
+Key issues with the original:
+- "transformative" - overused buzzword
+- "enterprise synergy platform" - three big words that mean nothing specific
+- "seamlessly optimizes workflow throughput" - passive, technical, vague
+
+[DOCUMENTATION] Input:  Prior to initializing the subsystem, verify that the environment parameters are appropriately configured.
+[DOCUMENTATION] Output: The user wants me to rewrite a technical instruction into more natural, human-style documentation. The original is quite formal and passive ("Prior to initializing..."). I need to make it sound like something a real engineer would actually write - direct, clear, with personality.
+
+Let me think about what this means:
+- "Verify that the environment parameters are appropriately configured" → This should be rewritten as an actionable step in plain language
+
+I'll aim for:
+1. Active voice
+2. Natural phrasing (not overly formal)
+3. Clear instructions
+4. Maybe add a bit of context or why it matters
+
+Let me draft a
+
+[SHORT STORY] Input:  A chilling aura of suspense blanketed the ancient mansion as Sarah turned the rusty doorknob.
+[SHORT STORY] Output: The user wants me to rewrite a given paragraph into an authentic, human-styled short story. The original is very clichéd: "A chilling aura of suspense blanketed the ancient mansion as Sarah turned the rusty doorknob."
+
+I need to:
+1. Make it feel more natural and less like a generic opening line
+2. Add character depth - who is Sarah? What's her relationship to this place?
+3. Show rather than tell - instead of saying "chilling aura of suspense," I should create that through atmosphere, sounds, physical sensations.
+4. Use specific details that ground the scene
+
+
+[CU Tracker] Stopped. Elapsed: 17.91 min (0.2985 h)
+[CU Tracker] Delta CU: 0.20 CU | Burn rate: 0.67 CU/h
+
+Record to paste into runs/p0-1-verify-unsloth-2.6b/run.json:
+{
+  "run_id": "p0-1-verify-unsloth-2.6b",
+  "task": "T1",
+  "status": "completed",
+  "base_model": "LiquidAI/LFM2.5-2.6B",
+  "smoke_mode": true,
+  "duration_seconds": 62.8623628616333,
+  "peak_vram_gb": 5.346487998962402,
+  "final_loss": 2.3674710988998413,
+  "cu_tracking": {
+    "delta": 0.19999999999998863,
+    "burn_rate": 0.6700094212823944,
+    "elapsed_hours": 0.2985032652484046
+  },
+  "verdict": "PASS - Unsloth natively trains LFM2.5-2.6B with 16-bit LoRA"
+}
+
+

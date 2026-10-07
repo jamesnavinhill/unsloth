@@ -29,7 +29,7 @@ Date: 2026-10-07. Supersedes v1 (research synthesis). Companion files: `draft.md
 | Setting | Value | Provenance |
 |---|---|---|
 | Base | `LiquidAI/LFM2.5-2.6B`, bf16, 16-bit LoRA | D1; Unsloth: 16-bit LoRA "slightly faster and slightly more accurate" than QLoRA; ~2.7B fits T4/L4 |
-| LoRA r / alpha / dropout | **16 / 32 / 0.05** | Prior sweep validated r16/α32 on this arch (r64, full-FT bought nothing); α=2r within [Unsloth guidance](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
+| LoRA r / alpha / dropout | **16 / 32 / 0** | Prior sweep validated r16/α32; dropout=0 required for Unsloth fast fused Triton kernels (measured in T1 smoke pass) |
 | target_modules | `q_proj,k_proj,v_proj,out_proj,in_proj,w1,w2,w3` | LFM2.5 hybrid names (no gate/up/down); ≡ "all-linear"; explicit = deterministic. Source: official notebooks ([unslothai/notebooks LFM2.5](https://github.com/unslothai/notebooks/blob/main/python_scripts/LFM2.5_(1.2B)-Conversational.py), [Liquid cookbook script](https://github.com/Liquid4All/cookbook/blob/main/finetuning/scripts/unsloth-sft-lfm2.5.py)) |
 | LR / scheduler | **1e-4, cosine, warmup_ratio 0.03** | Official 2e-4 w/ "reduce to 2e-5 for long runs"; 1e-4 validated by prior sweep; ratio-scaled warmup beats fixed 5 steps |
 | Optimizer | adamw_8bit, weight_decay 0.01 | Official config |

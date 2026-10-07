@@ -1,12 +1,23 @@
 {
   "run_id": "p0-1-verify-unsloth-2.6b",
   "task": "T1",
-  "started_utc": null,
+  "started_utc": "2026-10-07T23:23:55Z",
+  "completed_utc": "2026-10-07T23:25:00Z",
   "surface": "colab",
-  "gpu": "T4/L4",
+  "gpu": "Tesla T4 (15.64 GB VRAM)",
   "cu_meter": {
-    "at_start": null,
-    "at_end": null
+    "at_start": 200.0,
+    "at_end": 199.8,
+    "delta": 0.20,
+    "burn_rate_cu_per_hour": 0.67,
+    "elapsed_hours": 0.2985
+  },
+  "benchmark_metrics": {
+    "duration_seconds": 62.86,
+    "total_steps": 10,
+    "peak_vram_gb": 5.35,
+    "final_train_loss": 2.3675,
+    "step_loss_trajectory": [3.4169, 3.4169, 3.4169, 3.4169, 2.5272, 2.0592, 1.7065, 1.4305, 1.2181, 1.0657]
   },
   "config": {
     "base_model": "LiquidAI/LFM2.5-2.6B",
@@ -23,17 +34,21 @@
       "w2",
       "w3"
     ],
+    "trainable_params": 20135936,
+    "all_params": 2717334528,
+    "trainable_percent": 0.7410,
     "lr": 1e-4,
     "scheduler": "cosine",
     "warmup_ratio": 0.03,
-    "epochs": 1,
+    "epochs": 10,
     "batch_eff": 16,
     "seq_len": 4096,
     "seed": 17,
     "pins": {
       "transformers": "4.57.6",
       "trl": "0.22.2",
-      "unsloth": "latest"
+      "unsloth": "2026.10.2",
+      "torch": "2.11.0+cu130"
     }
   },
   "data": {
@@ -41,9 +56,8 @@
     "rows": 10
   },
   "artifacts": {
-    "adapter": null,
-    "merged": null,
-    "gguf": null
+    "wandb_run_url": "https://wandb.ai/navin_hill/huggingface/runs/huxz5tt6"
   },
-  "status": "pending_gpu_execution"
+  "status": "completed",
+  "verdict": "PASS - Unsloth natively trains LFM2.5-2.6B with 16-bit LoRA on T4 GPU"
 }

@@ -1,24 +1,25 @@
 # STATE — dashboard (the always-current answer to "where are we?")
 
-Last updated: 2026-10-07 (UTC) — GitHub synced (`jamesnavinhill/unsloth`), nominal connections documented (`CONNECTIONS.md`), T2 DONE, T1 staged in `runs/p0-1-verify-unsloth-2.6b/`.
+Last updated: 2026-10-07 (UTC) — Phase 0 COMPLETE: T1 verified (Unsloth × LFM2.5-2.6B on Tesla T4), T2 notebook template done, T3 credentials live, repo synced to GitHub.
 
-**Target**: `LiquidAI/LFM2.5-2.6B` (fallback: cookbook TRL path → VL-3B; decision D1 in `plan.md`)
-**Phase**: 0 — verify & provision (T3 DONE, T2 DONE; T1 staged for Colab GPU execution)
-**Next action**: Execute `notebooks/sft_lfm25_2_6b_v1.ipynb` on Google Colab (T4 or L4 GPU) to record measured tok/s, peak VRAM, and CU meter burn into `runs/p0-1-verify-unsloth-2.6b/run.json` (T1 completion). Then proceed to operator data session (T5–T9).
+**Target**: `LiquidAI/LFM2.5-2.6B` (**VERIFIED**: native 16-bit LoRA on Unsloth confirmed, 20.1M params, peak VRAM 5.35 GB)
+**Phase**: 1 — data (T4 bucket inventory unblocked; T5–T9 data curation & style packs per `datasets/DATA_SPEC.md`)
+**Next action**: Phase 1 data sourcing & exemplar construction: pull bucket READMEs via `hf` CLI (T4), triage `archive.zip` (T5), curate Stripe/Linear/editorial style packs (T8).
 
 ## CU budget ledger (200 CU/month, resets monthly)
 
 | Date | Surface | GPU | Task | CU used | CU remaining | Note |
 |---|---|---|---|---|---|---|
 | 2026-10-07 | — | — | — | 0 | 200 | baseline |
+| 2026-10-07 | Colab | T4 | T1 | 0.20 | 199.80 | Smoke verification (10 steps, 62.86s, 5.35GB VRAM) |
 
 ## Active runs
 
-- `p0-1-verify-unsloth-2.6b` (staged, ready for Colab execution).
+None. (Run `p0-1-verify-unsloth-2.6b` completed and archived).
 
 ## Blockers
 
-None. (HF token and WANDB_API_KEY need to be present in Colab Secrets `HF_TOKEN` and `WANDB_API_KEY` before launching the Colab notebook).
+None. Phase 0 fully verified.
 
 ## Recent results
 
