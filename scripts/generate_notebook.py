@@ -45,18 +45,30 @@ add_md("""# Liquid AI LFM2.5-2.6B Humanizer — SFT & Smoke Verification (v1)
 
 add_code("""# Cell 1: Environment & Version Pinned Installation
 # Pinned versions per plan.md §3: transformers==4.57.6, trl==0.22.2 (--no-deps)
+# Installs unsloth alongside mandatory unsloth_zoo dependency
 import sys
 
 !pip install --no-deps "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"
+!pip install --no-deps "unsloth_zoo @ git+https://github.com/unslothai/unsloth-zoo.git"
 !pip install --no-deps trl==0.22.2
 !pip install transformers==4.57.6
 !pip install bitsandbytes accelerate datasets peft sentencepiece protobuf wandb
+
+# Dynamic dependency check for unsloth_zoo
+try:
+    import unsloth_zoo
+except ImportError:
+    !pip install --no-deps unsloth_zoo
 
 import torch
 print(f"PyTorch: {torch.__version__} | CUDA available: {torch.cuda.is_available()}")
 if torch.cuda.is_available():
     print(f"Device: {torch.cuda.get_device_name(0)} | VRAM: {torch.cuda.get_device_properties(0).total_memory / 1e9:.2f} GB")
     print(f"BFloat16 supported: {torch.cuda.is_bf16_supported()}")
+
+print("\\n" + "="*50)
+print("[✓ CELL 1 COMPLETE] ─── Ready for Cell 2 (Credentials)")
+print("="*50)
 """)
 
 add_code("""# Cell 2: Credentials & Authenticated Services (Nominal Setup)
@@ -97,6 +109,10 @@ if wandb_key:
     print("[PASS] Weights & Biases: Authenticated")
 else:
     print("[WARN] WANDB_API_KEY not found. Telemetry will run in offline mode.")
+
+print("\\n" + "="*50)
+print("[✓ CELL 2 COMPLETE] ─── Ready for Cell 3 (Config & CU Tracker)")
+print("="*50)
 """)
 
 add_code("""# Cell 3: Configuration & Compute Unit (CU) Meter Tracker
@@ -140,6 +156,10 @@ class CUMeterTracker:
 cu_tracker = CUMeterTracker()
 # Record Colab CU reading from top-right corner before running:
 cu_tracker.start(initial_reading=200.0)
+
+print("\\n" + "="*50)
+print("[✓ CELL 3 COMPLETE] ─── Ready for Cell 4 (Model Loading)")
+print("="*50)
 """)
 
 add_code("""# Cell 4: Model Loading with Fallback Ladder (Decision D1)
@@ -186,6 +206,10 @@ except Exception as e:
             load_in_16bit=True,
         )
         print("[SUCCESS] Fallback (b) succeeded: Loaded LFM2.5-VL-3B via Unsloth.")
+
+print("\\n" + "="*50)
+print("[✓ CELL 4 COMPLETE] ─── Ready for Cell 5 (LoRA Configuration)")
+print("="*50)
 """)
 
 add_code("""# Cell 5: 16-Bit LoRA Configuration (§3 Table)
@@ -208,6 +232,10 @@ model = FastLanguageModel.get_peft_model(
 
 print("[PASS] LoRA Adapter attached successfully:")
 model.print_trainable_parameters()
+
+print("\\n" + "="*50)
+print("[✓ CELL 5 COMPLETE] ─── Ready for Cell 6 (Template & System Prompts)")
+print("="*50)
 """)
 
 add_code("""# Cell 6: Chat Template & System Prompts Character-for-Character Matching
@@ -225,7 +253,7 @@ def format_conversation(domain: str, ai_draft: str, human_target: str):
     sys_prompt = DOMAIN_SYSTEM_PROMPTS.get(domain, DOMAIN_SYSTEM_PROMPTS["blog"])
     messages = [
         {"role": "system", "content": sys_prompt},
-        {"role": "user", "content": f"Rewrite the following text into authentic, human-styled {domain}:\n\n{ai_draft}"},
+        {"role": "user", "content": f"Rewrite the following text into authentic, human-styled {domain}:\\n\\n{ai_draft}"},
         {"role": "assistant", "content": human_target}
     ]
     return messages
@@ -237,6 +265,10 @@ if tokenizer.bos_token and rendered.startswith(tokenizer.bos_token):
     rendered = rendered[len(tokenizer.bos_token):]
 print("Sample Rendered ChatML Template:")
 print(rendered[:250] + "...")
+
+print("\\n" + "="*50)
+print("[✓ CELL 6 COMPLETE] ─── Ready for Cell 7 (Dataset Preparation)")
+print("="*50)
 """)
 
 add_code("""# Cell 7: Dataset Preparation (Smoke Dataset or Production Hub Dataset)
@@ -289,6 +321,10 @@ else:
     # Normalize and format
     train_dataset = raw_dataset
     eval_dataset = None
+
+print("\\n" + "="*50)
+print("[✓ CELL 7 COMPLETE] ─── Ready for Cell 8 (Trainer Setup)")
+print("="*50)
 """)
 
 add_code("""# Cell 8: SFTTrainer Configuration with Response-Loss Masking & Tripwires
@@ -354,11 +390,15 @@ trainer = SFTTrainer(
 # Apply response loss masking: only train on assistant tokens
 trainer = train_on_responses_only(
     trainer,
-    instruction_part="<|im_start|>user\n",
-    response_part="<|im_start|>assistant\n",
+    instruction_part="<|im_start|>user\\n",
+    response_part="<|im_start|>assistant\\n",
 )
 
 print("[PASS] SFTTrainer configured with response-only loss masking and effective batch 16.")
+
+print("\\n" + "="*50)
+print("[✓ CELL 8 COMPLETE] ─── Ready for Cell 9 (Execution & Benchmark)")
+print("="*50)
 """)
 
 add_code("""# Cell 9: Execution & Benchmark Measurement
@@ -382,6 +422,10 @@ print(f"Total Steps:      {total_steps}")
 print(f"Final Train Loss: {final_loss:.4f}")
 print(f"Peak VRAM:        {peak_vram_gb:.2f} GB")
 print("=" * 60)
+
+print("\\n" + "="*50)
+print("[✓ CELL 9 COMPLETE] ─── Ready for Cell 10 (Inference Verification)")
+print("="*50)
 """)
 
 add_code("""# Cell 10: In-Notebook Generation Check (All 4 Domains)
@@ -398,13 +442,17 @@ print("\\n--- MODEL COMPLETION VERIFICATION (POST-SMOKE) ---")
 for domain, prompt_text in test_prompts:
     conv = [
         {"role": "system", "content": DOMAIN_SYSTEM_PROMPTS[domain]},
-        {"role": "user", "content": f"Rewrite the following text into authentic, human-styled {domain}:\n\n{prompt_text}"}
+        {"role": "user", "content": f"Rewrite the following text into authentic, human-styled {domain}:\\n\\n{prompt_text}"}
     ]
     inputs = tokenizer.apply_chat_template(conv, tokenize=True, add_generation_prompt=True, return_tensors="pt").to("cuda")
     outputs = model.generate(input_ids=inputs, max_new_tokens=128, temperature=0.2, top_k=50)
     gen_text = tokenizer.decode(outputs[0][inputs.shape[1]:], skip_special_tokens=True)
     print(f"\\n[{domain.upper()}] Input:  {prompt_text}")
     print(f"[{domain.upper()}] Output: {gen_text.strip()}")
+
+print("\\n" + "="*50)
+print("[✓ CELL 10 COMPLETE] ─── Ready for Cell 11 (CU Stop & Record)")
+print("="*50)
 """)
 
 add_code("""# Cell 11: Stop CU Tracker & Print run.json Record
@@ -427,6 +475,10 @@ run_record = {
 import json
 print("\\nRecord to paste into runs/p0-1-verify-unsloth-2.6b/run.json:")
 print(json.dumps(run_record, indent=2))
+
+print("\\n" + "="*50)
+print("[✓ CELL 11 COMPLETE] ─── Smoke Verification Successfully Concluded!")
+print("="*50)
 """)
 
 notebook_dir = Path("notebooks")
@@ -435,4 +487,4 @@ notebook_path = notebook_dir / "sft_lfm25_2_6b_v1.ipynb"
 with open(notebook_path, "w", encoding="utf-8") as f:
     json.dump(notebook, f, indent=2)
 
-print("Successfully wrote", notebook_path)
+print("Successfully wrote updated notebook:", notebook_path)
