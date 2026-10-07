@@ -1,0 +1,42 @@
+# secrets & local environment (NEVER commit)
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.token
+
+# bulk data / raw datasets / staging
+datasets/raw/
+datasets/staging/
+datasets/human_written_text/
+*.zip
+*.tar.gz
+*.parquet
+*.csv
+
+# run weights and heavy artifacts (canonical home: HF Hub)
+runs/*/artifacts/
+runs/*/*.pt
+runs/*/*.bin
+runs/*/*.safetensors
+runs/*/*.gguf
+
+# python & environment
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+
+# notebooks & IDE
+.ipynb_checkpoints/
+.vscode/
+.idea/
+*.swp
+desktop.ini
+Thumbs.db
+.DS_Store
+
