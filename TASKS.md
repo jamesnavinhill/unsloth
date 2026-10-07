@@ -4,14 +4,15 @@ Statuses: `TODO` / `IN PROGRESS (surface, date)` / `BLOCKED (reason)` / `DONE (d
 
 ## Phase 0 — verify & provision
 
-**T1 · Verify Unsloth trains LFM2.5-2.6B** — `TODO`
+**T1 · Verify Unsloth trains LFM2.5-2.6B** — `IN PROGRESS (Colab, 2026-10-07)`
 Colab (any GPU). Load `LiquidAI/LFM2.5-2.6B` with `FastLanguageModel.from_pretrained(max_seq_length=4096)`, attach the §3 LoRA config from `plan.md`, run a 10-sample smoke train from a tiny in-notebook dataset, then measure: tok/s, peak VRAM, and the Colab CU meter delta per hour. Record all three in `runs/p0-1-verify-unsloth-2.6b/`.
 - DoD: smoke train completes; measured numbers recorded; go/no-go verdict written in `notes.md`.
+- Staged: Run contract files initialized at `runs/p0-1-verify-unsloth-2.6b/` (`run.json`, `metrics.jsonl`, `notes.md`); notebook `notebooks/sft_lfm25_2_6b_v1.ipynb` ready for GPU execution.
 - Fallback ladder (decision D1): (a) Unsloth errors on `Lfm2ForCausalLM` at 2.6B → retry with Liquid cookbook TRL path ([sft_with_unsloth.ipynb](https://github.com/Liquid4All/cookbook/blob/main/finetuning/notebooks/sft_with_unsloth.ipynb) uses 1.2B — adapt model id; TRL notebook [here](https://github.com/Liquid4All/cookbook)); (b) still failing → switch target to `LFM2.5-VL-3B` (official Unsloth support, vision frozen) and record the switch in `plan.md` change log.
 - Sources: [Unsloth LFM2.5 tutorial](https://unsloth.ai/docs/models/tutorials/lfm2.5), [cookbook script](https://github.com/Liquid4All/cookbook/blob/main/finetuning/scripts/unsloth-sft-lfm2.5.py).
 
-**T2 · Pin versions + notebook template** — `TODO` (pairs with T1)
-Create `notebooks/sft_lfm25_2_6b_v1.ipynb` from the official notebook/script: pinned installs (`unsloth` latest, `transformers==4.57.6`, `trl==0.22.2 --no-deps`), Colab Secret usage (`HF_TOKEN` via `userdata`), the full §3 config, checkpoint-to-HF-Hub every 30–60 min, CU-meter logging helper, smoke mode flag.
+**T2 · Pin versions + notebook template** — `DONE (2026-10-07)` (pairs with T1)
+Created `notebooks/sft_lfm25_2_6b_v1.ipynb` from the official notebook/script: pinned installs (`unsloth` latest, `transformers==4.57.6`, `trl==0.22.2 --no-deps`), Colab Secret usage (`HF_TOKEN` via `userdata`), the full §3 config, checkpoint-to-HF-Hub every 30–60 min, CU-meter logging helper, smoke mode flag.
 - DoD: notebook in repo, runs end-to-end in smoke mode on Colab.
 - Source: [official Conversational notebook](https://github.com/unslothai/notebooks/blob/main/python_scripts/LFM2.5_(1.2B)-Conversational.py), adapted per D1.
 
@@ -88,3 +89,4 @@ Export GGUF q4_k_m + q8_0 from the merged model; compare against Liquid's offici
 |---|---|
 | 2026-10-07 | Board created; plan v2 locked (D1–D9); T3 blocked on operator credentials; T1/T2 next. |
 | 2026-10-07 | T3 DONE: HF token (write role) / W&B (personal + SA keys) / agency gateway / Kaggle all verified live. T4 unblocked (buckets public: CC=251GB/300 files, cccc=393GB/653 files). T7 rerouted to agency gateway. |
+| 2026-10-07 | Repo initialized & synced to GitHub (jamesnavinhill/unsloth); CONNECTIONS.md created; T2 DONE (notebooks/sft_lfm25_2_6b_v1.ipynb pinned & ready); T1 IN PROGRESS (runs/p0-1-verify-unsloth-2.6b/ staged). |

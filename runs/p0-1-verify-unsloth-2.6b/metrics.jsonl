@@ -1,0 +1,1 @@
+{"t": "2026-10-07T19:00:00Z", "kind": "init", "value": {"run_id": "p0-1-verify-unsloth-2.6b", "task": "T1", "base_model": "LiquidAI/LFM2.5-2.6B", "smoke_samples": 10}}
