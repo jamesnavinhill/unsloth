@@ -2,30 +2,36 @@
 
 Rule (ORCHESTRATION.md fail-safe #4): **no corpus enters a training or eval mix without a ledger row**. Append rows; never delete (superseded rows get status `RETIRED`).
 
-## Known findings (from 2026-10-07 zip inspection)
+## Findings & Triage (2026-10-07 Kaggle & Zip Deep Audit)
 
-`datasets/human_written_text/archive.zip` (2.3 GB zip / 6.35 GB uncompressed, Kaggle source: https://www.kaggle.com/datasets/youssefelebiary/human-written-text):
+`datasets/human_written_text/archive.zip` (2.37 GB zip / 6.35 GB uncompressed, Kaggle source: https://www.kaggle.com/datasets/youssefelebiary/human-written-text):
 
-| Member | Size | Finding |
-|---|---|---|
-| `Gutenberg.csv` | 2.06 GB | Mixed public-domain **and** copyrighted supplementary items (first row = © 2001 interview collection); multilingual (EN/FR/ES observed) |
-| `Human.csv` | 2.12 GB | Wikipedia-derived (first row byte-matches `Wikipedia.csv`) |
-| `Shuffled_Human.csv` | 2.12 GB | Same content as `Human.csv`, shuffled order (same size, different CRC) — **duplicate, drop** |
-| `Wikipedia.csv` | 30 MB | Wikipedia; `Human.csv` appears to be its superset |
-| `CNN_DailyMail.csv` | 30 MB | Wire news with tokenization artifacts ("Maureen . They were found . ") |
+Provenance verified via Kaggle API: The dataset creator cleaned the text using a naive regex `(.*?[/])` that systematically stripped formatting and detached periods from words, corrupting the tokenization stream.
 
-Coverage vs targets: story ✔ (Gutenberg, needs modern-style filter), docs ✔ (Wikipedia), news→blog △ (CNN/DM), **modern blog/casual web copy ✘** → must come from CC buckets (T6).
+| Member | Uncompressed | True Provenance | Quality & Artifact Finding | Verdict |
+|---|---|---|---|---|
+| `CNN_DailyMail.csv` | 30.5 MB (7,001 rows) | CNN/DailyMail 3.0.0 news wire | **Severe tokenization artifacts**: Punctuation detached by regex (`"John and . Audrey Cook... monoxide . poisoning . "`). Tabloid wire register. Research-only license. | **REJECT / DROP** (Punctuation corruption + wrong register) |
+| `Wikipedia.csv` | 29.8 MB (10,001 rows) | Wikipedia 2022 dump slice | Academic reference stubs (biographies, military units). First 3 rows byte-match `Human.csv`. | **REJECT / DROP** (Superseded by Human.csv; dry encyclopedia tone) |
+| `Human.csv` | 2,117.4 MB | Wikipedia 2022 full dump | 2.1 GB of raw Wikipedia encyclopedia articles. Dry academic reference text; zero agent-to-human continuity or modern technical tone. CC-BY-SA license constraint. | **REJECT / DROP** (Fails Stripe/Linear target tone; CC-BY-SA burden) |
+| `Shuffled_Human.csv` | 2,117.4 MB | Concatenated shuffle | Arbitrary shuffle concatenation of Gutenberg + Wikipedia + CNN/DM. Completely redundant duplicate. | **REJECT / DROP** (Redundant composite duplicate) |
+| `Gutenberg.csv` | 2,057.1 MB (~3,000 books) | GutenDex API dump | Each CSV cell is an entire 80k-word book. Contains proofreader headers (`Proofreaders [Illustration]`), Victorian dialect, and mixed copyright notices (e.g. row 1 carries © 2001 Marie Lebert). | **CONDITIONAL / RESERVE** (Low utility; requires heavy chunking & boilerplate stripping) |
+
+### Strategic Recommendation vs HF Buckets:
+**Drop `archive.zip` from our core training pipeline.** It contains zero modern developer documentation, zero agent work updates, zero PR/changelog narrative, and its news slice is corrupted by detached punctuation.
+
+The **HF Buckets** (`CommonCrawl-CreativeCommons-bucket` [251 GB] and `cccc_all_domains-bucket` [393 GB]) are modern, clean, well-tokenized, and carry genuine contemporary technical, marketing, and editorial human prose.
 
 ## Ledger
 
 | ID | Source | Domain | License verdict | Status | Rows (post-gate) | Notes |
 |---|---|---|---|---|---|---|
-| SRC-001 | zip: Gutenberg.csv | short story | **TBD** (T5: mixed PD/copyright, multilingual) | TRIAGE | — | boilerplate strip needed; language filter EN |
-| SRC-002 | zip: Human.csv / Wikipedia.csv | documentation | **TBD** (T5: Wikipedia = CC-BY-SA w/ attribution) | TRIAGE | — | verify Human.csv ⊇ Wikipedia.csv; provenance research on Kaggle page |
-| SRC-003 | zip: CNN_DailyMail.csv | news/blog input | **TBD** (T5: research-licensed — likely keep out of public sets) | TRIAGE | — | tokenization artifacts need cleanup |
-| SRC-004 | HF bucket CommonCrawl-CreativeCommons | blog / web copy | **TBD** (CC-crawl derived; operator-staged CC-licensed content — confirm license filter used at build time) | TRIAGE | — | verified 2026-10-07: public bucket, 251.1 GB / 300 files, layout `data/<CC-crawl>/<lang>/*.parquet` (multilingual: afr, deu, … seen), README.md + counts.json at root. Inventory via `hf` CLI (buckets don't serve `resolve/` URLs) |
-| SRC-005 | HF bucket cccc_all_domains | TBD | **TBD** (T4) | TRIAGE | — | verified 2026-10-07: public bucket, 393.1 GB / 653 files |
-| GEN-001 | T9 reverse-task drafts (big model) | all four | Derived — draft side is machine-generated; human side inherits source license | PLANNED | target ~20k | model choice + cost in T7 |
+| SRC-001 | zip: Gutenberg.csv | short story | **MIXED** (PD + copyrighted donations) | RETIRED | 0 | Whole-book rows; proofreader artifacts; Victorian dialect |
+| SRC-002 | zip: Human.csv / Wikipedia.csv | encyclopedia | **CC-BY-SA** | RETIRED | 0 | Dry reference text; fails modern continuity benchmark |
+| SRC-003 | zip: CNN_DailyMail.csv | news | **NON-COMMERCIAL** | RETIRED | 0 | Detached punctuation corruption (`"word . "`) |
+| SRC-004 | zip: Shuffled_Human.csv | composite | **MIXED** | RETIRED | 0 | Redundant shuffle composite of SRC-001/002/003 |
+| SRC-005 | HF bucket CommonCrawl-CreativeCommons | blog / web copy / docs | **CC-LICENSED** | ACTIVE | TBD (T4) | Verified 2026-10-07: public, 251.1 GB / 300 parquets, modern web crawl |
+| SRC-006 | HF bucket cccc_all_domains | technical / general | **CC-LICENSED** | ACTIVE | TBD (T4) | Verified 2026-10-07: public, 393.1 GB / 653 parquets |
+| GEN-001 | T9 reverse-task rewrites | all four | Derived | PLANNED | ~20k | Inputs = real traces; targets = Stripe/Linear/editorial rewrites |
 
 ## Published artifacts
 

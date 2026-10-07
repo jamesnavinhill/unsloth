@@ -27,10 +27,9 @@ Verified 2026-10-07: both buckets `repoType: bucket`, **public**, readable with 
 
 ## Phase 1 — data
 
-**T5 · Zip triage + licensing** — `TODO`
-For `C:\Users\james\projects\labwork\datasets\human_written_text\archive.zip` (known: Gutenberg 2.06GB mixed PD/copyright + multilingual; `Human.csv` Wikipedia-derived; `Shuffled_Human.csv` = shuffled duplicate, drop; CNN/DM with tokenization artifacts): language filter, Gutenberg boilerplate strip, license tagging per row-cluster, provenance research on the Kaggle source ([dataset page](https://www.kaggle.com/datasets/youssefelebiary/human-written-text)).
-- DoD: `datasets/LEDGER.md` rows with license verdicts + a go/no-go per corpus for public deployment.
-- Rule: nothing goes into a training mix without a ledger row.
+**T5 · Zip triage + licensing** — `DONE (2026-10-07)`
+Audited `archive.zip` via streaming inspect + Kaggle API (`youssefelebiary/human-written-text`). Finding: CNN/DM is corrupted by naive regex cleaning (detached punctuation `"word . "`); Wikipedia is dry reference stubs; Shuffled is an identical duplicate; Gutenberg is raw 80k-word Victorian books with mixed copyright.
+- DoD: All 5 members audited, provenance documented, verdicts recorded in `datasets/LEDGER.md`. Strategic verdict: **RETIRE archive.zip**; anchor dataset sourcing on modern HF Buckets (T4/T6) and Agency Gateway traces.
 
 **T6 · CC sourcing for blog/web-copy domains** — `TODO` (needs T4)
 The zip covers story (Gutenberg), docs-ish (Wikipedia), news (CNN) — it has **no modern blog/casual prose**. Sample blog/marketing-register human text from the CC buckets; same ledger discipline.
