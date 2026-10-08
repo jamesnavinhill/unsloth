@@ -27,13 +27,36 @@ We model our technical and agent-continuity outputs on the highest-caliber engin
 |---|---|---|
 | **Stripe** | Effortless clarity, respectful of reader time, deep technical precision, zero corporate throat-clearing. | Documentation, API descriptions, architectural overviews. |
 | **Linear** | Opinionated, crisp, high-context, fast-scannable, active verbs, zero bureaucratic fluff. | Changelogs, PR summaries, agent work progress logs. |
+| **Fly.io** | Conversational engineering depth, wry humor, deep infrastructure realism, exceptionally human and readable. | Technical guides, architecture explainers, system changelogs. |
 | **Basecamp / 37signals / Cloudflare** | Direct, human, conversational authority, explains causal reasoning (*"We changed X because Y, resulting in Z"*). | Post-mortems, accumulative agent handoffs, issue descriptions. |
+| **Veteran Tech Lore & Blogs** | PostHog (core team), Joel on Software, Dan Luu, Travis Downs, Julia Evans (jvns), Simon Willison, The Pragmatic Engineer, The Daily WTF. | Narrative technical storytelling, pragmatic engineering reflections. |
 
 #### Concrete Transformation Target:
 * **Robotic LLM Baseline**:
   > *"Certainly! In this pull request, we have comprehensively implemented a multifaceted suite of optimizations across the data ingestion pipeline. It is important to note that these changes not only improve throughput, but also ensure scalability..."*
 * **High-Continuity Humanizer (Target)**:
   > *"This PR resolves the 400ms ingestion bottleneck by batching database writes in 500-record chunks and pre-compiling the regex filters. Across our local benchmarks, throughput doubled without increasing peak memory. All existing integration tests pass without changes."*
+
+---
+
+### 2.2 Trace Extraction Specification (10k Concluding "DONE" Responses)
+
+To build the raw input side of our training corpus, we extract concluding, meaty assistant responses from real multi-turn developer and agent trajectories:
+
+1. **Target**: Concluding "DONE" type responses from the assistant summarizing completed work, verification outcomes, architectural decisions, and next steps.
+2. **Volume Goal**: **~10,000 raw candidate responses** (overshooting to allow strict downstream filtering to a polished 5k–10k training pair set).
+3. **Source Buckets & Frontier Model Mix**:
+   - `jamesnavinhill/deepseek-v4-pro-0813-agentic-bucket` (`deepseek-v4-pro`): ~8,500+ successful trajectories spanning planning decomposition, tool calling, constraint satisfaction, and stateful dialogues.
+   - `jamesnavinhill/k3-bucket` (`moonshotai/kimi-k3`): ~500 trajectories of terminal tool executions and sandbox verifications.
+   - `jamesnavinhill/kernelbench-mega-traces-bucket` (Frontier models: `codex_gpt-5.5`, `claude-opus-4-8`, `deepseek-v4-pro`, `glm-5.2`, `kimi-k2.7-code`, `gemini-3.5-flash`): ~133 mega-session concluding writeups.
+   - `jamesnavinhill/claude-fable-5-claude-code-bucket` (`claude-code` / `fable-5`): ~65 real developer CLI session summaries.
+4. **Extraction Criteria & Quality Gates**:
+   - **Role**: Must be the `assistant`.
+   - **Terminal Position**: The final text-bearing response of the session or the concluding summary turn before session termination.
+   - **Minimum Length**: $\ge 120$ characters (filters out single-line confirmations like *"Done!"* or *"Fixed."*).
+   - **Maximum Length**: $\le 6,000$ characters (prevents runaway token dumps).
+   - **Sanitation**: Strip raw tool invocation JSON payloads; exclude API rate limit / session cutoff messages.
+   - **Deduplication**: Content hash deduplication ensuring unique response bodies.
 
 ---
 

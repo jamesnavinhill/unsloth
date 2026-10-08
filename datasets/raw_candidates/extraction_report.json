@@ -1,0 +1,42 @@
+{
+  "total_records": 10000,
+  "target_total": 10000,
+  "models": {
+    "deepseek-v4-pro": 9437,
+    "moonshotai/kimi-k3": 438,
+    "claude-fable-5": 60,
+    "claude": 11,
+    "kinetic-claude": 11,
+    "codex": 8,
+    "or-fable": 7,
+    "grok": 6,
+    "deepseek-claude": 5,
+    "zai-claude": 5,
+    "cursor": 3,
+    "muse": 2,
+    "minimax-claude": 2,
+    "gemini": 1,
+    "longcat-claude": 1,
+    "hy3-claude": 1,
+    "inkling": 1,
+    "agy": 1
+  },
+  "buckets": {
+    "jamesnavinhill/deepseek-v4-pro-0813-agentic-bucket": 9437,
+    "jamesnavinhill/k3-bucket": 438,
+    "jamesnavinhill/kernelbench-mega-traces-bucket": 65,
+    "jamesnavinhill/claude-fable-5-claude-code-bucket": 60
+  },
+  "character_length": {
+    "min": 120,
+    "max": 5998,
+    "mean": 642.4225,
+    "median": 305.0
+  },
+  "word_count": {
+    "min": 1,
+    "max": 1042,
+    "mean": 97.1086,
+    "median": 47.0
+  }
+}

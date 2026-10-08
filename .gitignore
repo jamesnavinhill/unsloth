@@ -9,7 +9,11 @@
 # bulk data / raw datasets / staging
 datasets/raw/
 datasets/staging/
+datasets/.cache/
+datasets/raw_candidates/*.parquet
+datasets/raw_candidates/*.jsonl
 datasets/human_written_text/
+scratch/
 *.zip
 *.tar.gz
 *.parquet
