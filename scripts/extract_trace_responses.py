@@ -32,8 +32,7 @@ CACHE_DIR = ROOT_DIR / "datasets" / ".cache"
 OUTPUT_DIR = ROOT_DIR / "datasets" / "raw_candidates"
 ENV_PATH = ROOT_DIR / ".env"
 
-MIN_CHAR_LEN = 120
-MAX_CHAR_LEN = 6000
+MIN_CHAR_LEN = 500
 TARGET_TOTAL = 10000
 
 def load_env() -> Dict[str, str]:
@@ -52,10 +51,19 @@ def compute_hash(text: str) -> str:
     return hashlib.sha256(norm.encode("utf-8")).hexdigest()
 
 def is_valid_prose(text: str) -> bool:
-    """Filter out pure code blocks or API error messages."""
+    """Filter out single-line confirmations, pure code blocks, raw JSON schemas, and synthetic harness loops."""
     stripped = text.strip()
-    if len(stripped) < MIN_CHAR_LEN or len(stripped) > MAX_CHAR_LEN:
+    if len(stripped) < MIN_CHAR_LEN:
         return False
+    
+    # Reject raw JSON / dict dumps
+    if stripped.startswith("{") or stripped.startswith("["):
+        return False
+    
+    # Reject synthetic file-counting harness loops
+    if "item=count" in stripped or "out/total.txt" in stripped:
+        return False
+
     # Reject known API error messages
     error_markers = [
         "session limit",
@@ -68,7 +76,7 @@ def is_valid_prose(text: str) -> bool:
     ]
     lower = stripped.lower()
     for em in error_markers:
-        if em in lower and len(stripped) < 250:
+        if em in lower and len(stripped) < 700:
             return False
     return True
 
@@ -101,9 +109,16 @@ def extract_deepseek_traces(api: HfApi, max_needed: int) -> List[Dict[str, Any]]
             continue
         print(f"[*] Parsing {p_path.name}...")
         df = pd.read_parquet(p_path)
-        # Prioritize successful trajectories
-        success_mask = (df["disposition"] == "traj_success") | (df["verifier_passed"] == True)
-        df_success = df[success_mask] if success_mask.any() else df
+        # Prioritize successful trajectories and drop non-English / raw schema tasks
+        task_filter = (
+            (df["task_type"] != "ds4-structured_outputs") &
+            (df["task_type"] != "ds4-multilingual_multi_turn") &
+            (df["task_type"] != "ds4-memory_context_management") &
+            (df["task_type"] != "ds4-verifiable_math") &
+            (df["task_type"] != "ds4-science_verifiable")
+        )
+        success_mask = ((df["disposition"] == "traj_success") | (df["verifier_passed"] == True)) & task_filter
+        df_success = df[success_mask] if success_mask.any() else df[task_filter]
 
         for _, row in df_success.iterrows():
             msgs = row.get("messages")
@@ -197,6 +212,8 @@ def extract_k3_traces(api: HfApi) -> List[Dict[str, Any]]:
             # Scan backwards for substantive text without tool calls
             for e in reversed(msgs):
                 m = e.get("message", {})
+                if m.get("role") != "assistant":
+                    continue
                 content = m.get("content", [])
                 if isinstance(content, list):
                     text_parts = [c.get("text", "") for c in content if isinstance(c, dict) and c.get("type") == "text"]
@@ -218,7 +235,6 @@ def extract_k3_traces(api: HfApi) -> List[Dict[str, Any]]:
                                 "word_count": len(text.split()),
                                 "sha256": h
                             })
-                        break
         except Exception as err:
             pass
 
@@ -288,7 +304,6 @@ def extract_kernelbench_traces(api: HfApi) -> List[Dict[str, Any]]:
                                 "word_count": len(text.split()),
                                 "sha256": h
                             })
-                        break
         except Exception as err:
             pass
 
@@ -359,6 +374,136 @@ def extract_claude_code_traces(api: HfApi) -> List[Dict[str, Any]]:
     return candidates
 
 # -----------------------------------------------------------------------------
+# Bucket 5: Fable-5 Premium Bucket (Claude Fable-5 & Opus Benchmark Traces)
+# -----------------------------------------------------------------------------
+def extract_fable_premium_traces(api: HfApi) -> List[Dict[str, Any]]:
+    bucket_id = "jamesnavinhill/fable-5-premium-bucket"
+    target_dir = CACHE_DIR / "fable_premium"
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    files = [
+        ("agent_traces/validation.parquet", target_dir / "validation.parquet"),
+        ("agent_traces/test.parquet", target_dir / "test.parquet")
+    ]
+    to_dl = [(r, l) for r, l in files if not l.exists() or l.stat().st_size == 0]
+    if to_dl:
+        print(f"[*] Downloading {len(to_dl)} files from {bucket_id}...")
+        api.download_bucket_files(bucket_id, to_dl)
+
+    candidates = []
+    seen_hashes = set()
+
+    for _, local_p in files:
+        if not local_p.exists():
+            continue
+        try:
+            df = pd.read_parquet(local_p)
+            for _, row in df.iterrows():
+                msgs = row.get("messages")
+                if isinstance(msgs, str):
+                    try:
+                        msgs = json.loads(msgs)
+                    except Exception:
+                        continue
+                if not isinstance(msgs, (list, tuple)):
+                    continue
+                asst_msgs = [m for m in msgs if isinstance(m, dict) and m.get("role") == "assistant"]
+                if not asst_msgs:
+                    continue
+                content = asst_msgs[-1].get("content", "")
+                if isinstance(content, list):
+                    content = "\n".join([c.get("text", "") for c in content if isinstance(c, dict) and c.get("type") == "text"])
+                if isinstance(content, str) and is_valid_prose(content):
+                    h = compute_hash(content)
+                    if h not in seen_hashes:
+                        seen_hashes.add(h)
+                        candidates.append({
+                            "source_bucket": bucket_id,
+                            "source_file": local_p.name,
+                            "model": row.get("model", "claude-fable-5"),
+                            "task_type": "coding_benchmark",
+                            "domain": "engineering",
+                            "trajectory_id": str(row.get("session_id", "")),
+                            "text": content.strip(),
+                            "char_len": len(content.strip()),
+                            "word_count": len(content.strip().split()),
+                            "sha256": h
+                        })
+        except Exception as err:
+            pass
+
+    print(f"[✓] Extracted {len(candidates)} candidates from {bucket_id}")
+    return candidates
+
+# -----------------------------------------------------------------------------
+# Bucket 6: SWE-Hero OpenHands Trajectories (Real-World SWE Issue Resolution)
+# -----------------------------------------------------------------------------
+def extract_swe_hero_traces(max_needed: int) -> List[Dict[str, Any]]:
+    dataset_id = "nvidia/SWE-Hero-openhands-trajectories"
+    print(f"[*] Stream-sampling up to {max_needed} concluding responses from {dataset_id}...")
+    candidates = []
+    seen_hashes = set()
+
+    for chunk in range(14):
+        if len(candidates) >= max_needed:
+            break
+        url = f"https://huggingface.co/datasets/nvidia/SWE-Hero-openhands-trajectories/resolve/main/data/train-{chunk:05d}-of-00014.parquet"
+        print(f"[*] Reading chunk {chunk:02d} ({url.split('/')[-1]})...")
+        try:
+            df = pd.read_parquet(url)
+            for _, row in df.iterrows():
+                traj = row.get("trajectory")
+                if not isinstance(traj, (list, tuple)) and not hasattr(traj, "__iter__"):
+                    continue
+                traj_list = list(traj)
+                if not traj_list:
+                    continue
+                last = traj_list[-1]
+                if not isinstance(last, dict):
+                    continue
+
+                text = (last.get("content") or "").strip()
+                tc = last.get("tool_calls", [])
+                if isinstance(tc, (list, tuple)):
+                    for c in tc:
+                        if isinstance(c, dict):
+                            fn = c.get("function", {})
+                            args = fn.get("arguments", "")
+                            if isinstance(args, str) and "message" in args:
+                                try:
+                                    args_obj = json.loads(args)
+                                    m = args_obj.get("message", "")
+                                    if isinstance(m, str) and len(m) > len(text):
+                                        text = m.strip()
+                                except Exception:
+                                    pass
+
+                if is_valid_prose(text):
+                    h = compute_hash(text)
+                    if h not in seen_hashes:
+                        seen_hashes.add(h)
+                        candidates.append({
+                            "source_bucket": dataset_id,
+                            "source_file": f"train-{chunk:05d}-of-00014.parquet",
+                            "model": "openhands/swe-agent",
+                            "task_type": "swe_issue_resolution",
+                            "domain": f"repo:{row.get('repo', 'python')}",
+                            "trajectory_id": str(row.get("instance_id", "")),
+                            "text": text,
+                            "char_len": len(text),
+                            "word_count": len(text.split()),
+                            "sha256": h
+                        })
+                        if len(candidates) >= max_needed:
+                            break
+        except Exception as err:
+            print(f"[!] Warning reading chunk {chunk}: {err}")
+            continue
+
+    print(f"[✓] Extracted {len(candidates)} candidates from {dataset_id}")
+    return candidates
+
+# -----------------------------------------------------------------------------
 # Main Extraction Coordinator
 # -----------------------------------------------------------------------------
 def main():
@@ -375,18 +520,23 @@ def main():
     print("Starting Trace Concluding 'DONE' Response Extraction (Target: ~10,000)")
     print("=" * 70)
 
-    # 1. Specialized frontier sources first
+    # 1. Specialized frontier sources from user buckets
     claude_cands = extract_claude_code_traces(api)
     kb_cands = extract_kernelbench_traces(api)
     k3_cands = extract_k3_traces(api)
+    fable_cands = extract_fable_premium_traces(api)
+    ds_cands = extract_deepseek_traces(api, max_needed=5000)
 
-    specialized_count = len(claude_cands) + len(kb_cands) + len(k3_cands)
-    needed_from_deepseek = max(0, TARGET_TOTAL - specialized_count)
-    print(f"[*] Specialized candidates: {specialized_count}. Pulling {needed_from_deepseek} from DeepSeek V4 Pro...")
+    local_total = len(claude_cands) + len(kb_cands) + len(k3_cands) + len(fable_cands) + len(ds_cands)
+    print(f"[*] Assembled {local_total} candidates from user trace buckets.")
 
-    ds_cands = extract_deepseek_traces(api, max_needed=needed_from_deepseek)
+    needed_from_swe = max(0, TARGET_TOTAL - local_total)
+    swe_cands = []
+    if needed_from_swe > 0:
+        # Buffer slightly by 200 to account for cross-dataset deduplication
+        swe_cands = extract_swe_hero_traces(max_needed=needed_from_swe + 200)
 
-    all_candidates = claude_cands + kb_cands + k3_cands + ds_cands
+    all_candidates = claude_cands + kb_cands + k3_cands + fable_cands + ds_cands + swe_cands
 
     # Deduplicate across the full composite
     unique_candidates = []
@@ -397,6 +547,8 @@ def main():
             # Assign canonical ID
             c["id"] = f"raw_trace_{len(unique_candidates):05d}"
             unique_candidates.append(c)
+            if len(unique_candidates) >= TARGET_TOTAL:
+                break
 
     print("\n" + "=" * 70)
     print(f"Extraction Complete: {len(unique_candidates)} unique responses assembled!")

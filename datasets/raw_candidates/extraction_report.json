@@ -2,41 +2,46 @@
   "total_records": 10000,
   "target_total": 10000,
   "models": {
-    "deepseek-v4-pro": 9437,
-    "moonshotai/kimi-k3": 438,
-    "claude-fable-5": 60,
-    "claude": 11,
-    "kinetic-claude": 11,
-    "codex": 8,
-    "or-fable": 7,
+    "openhands/swe-agent": 5944,
+    "deepseek-v4-pro": 3011,
+    "moonshotai/kimi-k3": 831,
+    "claude-fable-5": 108,
+    "unknown": 44,
+    "or-fable": 8,
+    "claude": 8,
+    "zai-claude": 7,
     "grok": 6,
     "deepseek-claude": 5,
-    "zai-claude": 5,
+    "codex": 5,
+    "inkling": 4,
+    "kinetic-claude": 4,
+    "minimax-claude": 3,
+    "claude-opus-4-6": 3,
     "cursor": 3,
     "muse": 2,
-    "minimax-claude": 2,
-    "gemini": 1,
+    "agy": 1,
     "longcat-claude": 1,
-    "hy3-claude": 1,
-    "inkling": 1,
-    "agy": 1
+    "claude-opus-4-8": 1,
+    "claude-opus-4-7": 1
   },
   "buckets": {
-    "jamesnavinhill/deepseek-v4-pro-0813-agentic-bucket": 9437,
-    "jamesnavinhill/k3-bucket": 438,
-    "jamesnavinhill/kernelbench-mega-traces-bucket": 65,
-    "jamesnavinhill/claude-fable-5-claude-code-bucket": 60
+    "nvidia/SWE-Hero-openhands-trajectories": 5944,
+    "jamesnavinhill/deepseek-v4-pro-0813-agentic-bucket": 3011,
+    "jamesnavinhill/k3-bucket": 831,
+    "jamesnavinhill/fable-5-premium-bucket": 109,
+    "jamesnavinhill/kernelbench-mega-traces-bucket": 57,
+    "jamesnavinhill/claude-fable-5-claude-code-bucket": 48
   },
   "character_length": {
-    "min": 120,
+    "min": 500,
     "max": 5998,
-    "mean": 642.4225,
-    "median": 305.0
+    "mean": 1827.4074,
+    "median": 1828.0
   },
   "word_count": {
-    "min": 1,
+    "min": 59,
     "max": 1042,
-    "mean": 97.1086,
-    "median": 47.0
+    "mean": 253.5672,
+    "median": 245.0
   }
 }

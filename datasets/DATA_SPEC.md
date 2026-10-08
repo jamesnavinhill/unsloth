@@ -13,23 +13,8 @@ The target is an **Agent-to-Human & Public-Facing Engineering Prose Humanizer**:
 - **Agent Work Updates**: Meaty, accumulative updates from autonomous coding agents to human operators summarizing complex multi-step work, decisions made, tradeoffs evaluated, and next steps.
 - **Pull Request Descriptions**: Short executive summaries and long architectural overviews that clearly explain *why* changes occurred and their exact impact.
 - **Changelogs & Release Notes**: High-context, human-readable announcements that inform users and engineers without robotic buzzwords.
-- **Technical Documentation**: Authoritative, concise, and delightfully human-readable docs.
-- **Editorial / Creative Copy**: Modernized longform essays, persuasive copy, and narratives that shatter the hypnotic, monotone LLM drone.
-
----
-
-## 2. Benchmark Exemplars & Target Tones
-
-### 2.1 The Engineering Continuity Benchmark (The "Top 3" Model)
-We model our technical and agent-continuity outputs on the highest-caliber engineering communicators in the software industry:
-
-| Benchmark Organization | Tone & Architectural Qualities | Target Application in Humanizer |
-|---|---|---|
-| **Stripe** | Effortless clarity, respectful of reader time, deep technical precision, zero corporate throat-clearing. | Documentation, API descriptions, architectural overviews. |
-| **Linear** | Opinionated, crisp, high-context, fast-scannable, active verbs, zero bureaucratic fluff. | Changelogs, PR summaries, agent work progress logs. |
-| **Fly.io** | Conversational engineering depth, wry humor, deep infrastructure realism, exceptionally human and readable. | Technical guides, architecture explainers, system changelogs. |
-| **Basecamp / 37signals / Cloudflare** | Direct, human, conversational authority, explains causal reasoning (*"We changed X because Y, resulting in Z"*). | Post-mortems, accumulative agent handoffs, issue descriptions. |
-| **Veteran Tech Lore & Blogs** | PostHog (core team), Joel on Software, Dan Luu, Travis Downs, Julia Evans (jvns), Simon Willison, The Pragmatic Engineer, The Daily WTF. | Narrative technical storytelling, pragmatic engineering reflections. |
+- **Technical Documentation & Architecture Guides**: Authoritative, concise, parameter-precise, and direct docs (Stripe / Fly.io style).
+- **Changelogs, Release Notes & PR Summaries**: High-context, human-readable announcements that explain mechanical causality, exact files touched, and verification facts without robotic buzzwords or emoji checklists (Linear style).
 
 #### Concrete Transformation Target:
 * **Robotic LLM Baseline**:
@@ -57,16 +42,6 @@ To build the raw input side of our training corpus, we extract concluding, meaty
    - **Maximum Length**: $\le 6,000$ characters (prevents runaway token dumps).
    - **Sanitation**: Strip raw tool invocation JSON payloads; exclude API rate limit / session cutoff messages.
    - **Deduplication**: Content hash deduplication ensuring unique response bodies.
-
----
-
-### 2.2 The Modernized Editorial & Narrative Benchmark
-For creative writing, blog posts, and longform copy, we borrow core structural principles from literary masters (burstiness, texture, asymmetry, active verbs), modernized for contemporary longform prose (e.g. *Stripe Press*, *Increment*, *The Verge* features, *Wired* longform):
-
-1. **Syntactic Burstiness**: Sentence lengths vary dynamically from 3 words to 40+ words. The rhythm feels intentional and alive.
-2. **Asymmetry**: Rejection of symmetrical tri-colon lists (*"speed, reliability, and security"*).
-3. **Concrete Nouns & Verbs**: Banning corporate abstractions (*"synergy"*, *"transformative landscape"*, *"delve into the realm"*).
-4. **Natural Grounding**: Eliminating throat-clearing markers (*"In conclusion"*, *"Furthermore"*, *"It is crucial to remember"*, *"A testament to"*).
 
 ---
 

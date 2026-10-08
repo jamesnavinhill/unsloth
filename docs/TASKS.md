@@ -36,23 +36,26 @@ Audited `archive.zip` via streaming inspect + Kaggle API (`youssefelebiary/human
 - DoD: All 5 members audited, provenance documented, verdicts recorded in `datasets/LEDGER.md`. Strategic verdict: **RETIRE archive.zip**; anchor dataset sourcing on modern HF Buckets (T4/T6) and Agency Gateway traces.
 
 **T6 · 10k Concluding Assistant "DONE" Trace Extraction** — `DONE (2026-10-07)`
-Extracted concluding, meaty assistant responses from multi-turn traces across 4 active buckets (`deepseek-v4-pro`, `k3-bucket`, `kernelbench-mega-traces`, `claude-fable-5`). Assembled exactly **10,000 unique candidate responses** ($\ge 120$ chars, text-only, non-error): 9,437 deepseek-v4-pro, 438 moonshotai/kimi-k3, 60 claude-fable-5, 65 kernelbench frontier models (codex, claude-opus, glm, grok, etc.).
-- DoD: Executed `scripts/extract_trace_responses.py`; produced `datasets/raw_candidates/assistant_done_10k.jsonl` (10.55 MB), companion `.parquet` (4.16 MB), and `extraction_report.json`. Verified in `datasets/LEDGER.md`.
+Extracted concluding, meaty assistant responses from multi-turn traces across user buckets and OpenHands SWE-Hero with strict $\ge 500$ character cutoff (purging JSON schemas, counting loops, and non-English rows). Assembled exactly **10,000 unique candidate responses**: 5,944 openhands/swe-agent, 3,011 deepseek-v4-pro, 831 moonshotai/kimi-k3, 108 claude-fable-5, 106 frontier/bench models.
+- DoD: Executed `scripts/extract_trace_responses.py`; produced `datasets/raw_candidates/assistant_done_10k.parquet` (10.12 MB), `assistant_done_10k.jsonl` (23.08 MB), and `extraction_report.json` (median 1,828 chars, mean 1,827 chars). Verified in `datasets/LEDGER.md`.
 
-**T7 · Rewriter model + trace sources** — `TODO` (v2 draft per D5; finalize in data-plan session)
-Two picks, both routed through the **agency gateway** (verified live, 213 models):
-1. *Rewriter LLM* — converts trace responses into per-domain human style. Candidates: `or-nvidia-nemotron-3-ultra-550b`, `or-nvidia-nemotron-3-super-120b`, `or-free`, `ne-gpt-oss-120b`, `cf-*` pool. Also notable: `or-liquid-lfm-2.5-2.6b` (target model servable — inference baselines without local downloads).
-2. *Trace sources* (the INPUT side = real LLM outputs): (a) public prompt/response datasets — candidates: WildChat-class, LMSYS-class, Nemotron/Tulu-class post-training mixtures; **license verified per dataset before selection** (some are research-only); (b) **agency gateway's own LiteLLM logs** (Postgres per vault `agency`) — production-faithful traces from real use; privacy/licensing review required before training on them.
-- DoD: rewriter chosen (with a small-sample A/B on 20 rewrites against the style-pack rubric); trace sources shortlisted with license verdicts in `datasets/LEDGER.md`.
-- Sources: method provenance [jialinyyzz/humanizer](https://huggingface.co/jialinyyzz/humanizer), [Panza](https://arxiv.org/abs/2407.10994).
+**T7 · Clean Evaluation & Re-examination** — `DONE (2026-10-08)`
+Benchmarked candidate rewriter models (`nv-moonshotai-kimi-k3` and `nv-nvidia-nemotron-3-ultra-550b-a55b`) using official upstream NIM parameters (`temperature: 1.0, top_p: 0.95`, zero client overrides, zero length truncation) on genuine SWE-Hero trace completions.
+- Outputs saved to `datasets/eval_10_clean_comparison.md` and `datasets/eval_10_clean.json`.
+- Key Finding: Aggressive rewriting strips vital engineering context (code diffs, input/output reproductions, line numbers) and creates dense walls of text. Target SFT model defined as a surgical reformatter/de-slopper: if output is good, leave it alone; preserve all code and examples; strip only chatbot throat-clearing, repetitive boilerplate, and emoji noise.
 
-**T8 · Style packs + trace curation** — `IN PROGRESS (agent, 2026-10-07)`
-Per domain (Tech Docs, Changelogs, Engineering Lore, Creative Narrative): curated human **style pack** = exemplar passages + style spec + banned clichés lexicon. Roster locked: Stripe, Linear, Fly.io, Plaid, Render, Docker, PostHog (core team), Joel on Software, Dan Luu, Travis Downs, Julia Evans (jvns), Simon Willison, The Pragmatic Engineer, The Daily WTF.
-- DoD: 4 style packs reviewed by operator (this is the human-judgment-heavy step); trace pool gated in ledger.
+**T8 · Style packs + trace curation** — `DONE (2026-10-07)`
+Harvested 34 authentic human markdown exemplars across all 14 requested sources (Linear, Stripe, Plaid, Render, Docker, Fly.io, PostHog, Joel, Dan Luu, Travis Downs, Julia Evans, Simon Willison, Pragmatic Engineer, Daily WTF) into `references/style_exemplars/`.
+- DoD: Cleaned HTML to pure Markdown, sanitized mock credentials, generated master `INDEX.md`, committed and pushed to git remote. Banned clichés lexicon codified.
 
-**T9 · Rewrite-at-scale + gates** — `TODO` (v2 draft; needs T7/T8)
-Batch rewrite trace responses into domain style grounded on the style packs; run quality gates per pair: fact-fidelity judge, naturalness judge, 5-gram copy-reuse ceiling, refusal check; failures → regenerate once, then drop. Also produce the reverse-task slice (human text as targets) as a mix anchor (~30–50% of pairs, ratio set in data-plan session). Publish gated pairs to HF (private until licensing clears).
-- DoD: ~20k+ gated pairs published; ledger rows; 50-pair spot check reviewed by operator.
+**T9 · Conservative Reformatter Pair Generation at Scale** — `TODO` (needs T7/T8)
+Batch-generate training pairs `(input, target)` using `nv-moonshotai-kimi-k3` (with `nv-nvidia-nemotron-3-ultra-550b-a55b` fallback) enforcing the **Rule of Conservation of Context**:
+- Code blocks, diffs, line numbers, and before/after reproductions remain 100% immutable.
+- Surgical edits only: drop conversational openings ("Perfect! Now let me summarize..."), drop closing boilerplate ("minimal, focused, backward compatible"), strip emoji checklist clutter (`✅`, `🎯`, `🔧`).
+- Zero arbitrary temperature/top_p overrides (upstream defaults only).
+- Publish gated parquet files (`datasets/sft_humanizer_train.parquet`, `datasets/sft_humanizer_val.parquet`).
+- DoD: ~5k–10k conservative pairs generated; automated regex validation against information loss; spot check reviewed by operator.
+
 
 **T10 · Eval suite v1 (frozen before any training)** — `TODO` (parallel with T8)
 Build and freeze: (a) per-domain rewrite probes (30+/domain, held-out human passages never in training); (b) fiction refusal probes (XSTest-style, ~50 items); (c) general-IF guard set; (d) LLM-judge rubric for naturalness + fact-fidelity + 5-gram copy-reuse. Publish to HF (private), record hashes in the ledger.
@@ -91,3 +94,5 @@ Export GGUF q4_k_m + q8_0 from the merged model; compare against Liquid's offici
 | 2026-10-07 | Board created; plan v2 locked (D1–D9); T3 blocked on operator credentials; T1/T2 next. |
 | 2026-10-07 | T3 DONE: HF token (write role) / W&B (personal + SA keys) / agency gateway / Kaggle all verified live. T4 unblocked (buckets public: CC=251GB/300 files, cccc=393GB/653 files). T7 rerouted to agency gateway. |
 | 2026-10-07 | Repo initialized & synced to GitHub (jamesnavinhill/unsloth); CONNECTIONS.md created; T2 DONE (notebooks/sft_lfm25_2_6b_v1.ipynb pinned & ready); T1 IN PROGRESS (runs/p0-1-verify-unsloth-2.6b/ staged). |
+| 2026-10-08 | T7 Clean Evaluation DONE: purged all client temperature/top_p overrides, ran 10-sample untruncated eval via official upstream NIM settings. Strategic pivot locked: SFT targets must be conservative surgical reformattings preserving code diffs, before/after examples, and structure 100%. T9 re-scoped. |
+

@@ -34,9 +34,11 @@ The **HF Buckets** (`CommonCrawl-CreativeCommons-bucket` [251 GB] and `cccc_all_
 | SRC-007 | HF bucket deepseek-v4-pro-0813-agentic-bucket | agentic execution | **RESEARCH/DERIVED** | ACTIVE | ~8,500+ | 19,072 train + 1,065 test trajectories; verifier-passed deepseek-v4-pro agent traces |
 | SRC-008 | HF bucket k3-bucket | agentic tool use | **RESEARCH/DERIVED** | ACTIVE | ~540 | 544 trajectories of moonshotai/kimi-k3 terminal sessions |
 | SRC-009 | HF bucket kernelbench-mega-traces-bucket | kernel & code optimization | **RESEARCH/DERIVED** | ACTIVE | ~130 | 133 frontier sessions (codex_gpt-5.5, claude-opus-4-8, glm-5.2, kimi, deepseek) |
-| SRC-010 | HF bucket claude-fable-5-claude-code-bucket | CLI developer engineering | **PRIVATE/OPERATOR** | ACTIVE | ~65 | 65 multi-turn interactive Claude Code CLI developer sessions |
-| RAW-001 | Trace Concluding DONE Pool (`assistant_done_10k`) | engineering / agent prose | **COMPOSITE** | COMPLETE | 10,000 | Extracted via `scripts/extract_trace_responses.py`: 9,437 deepseek-v4-pro, 438 kimi-k3, 60 claude-fable-5, 65 kernelbench frontier; median 305 chars, mean 642 chars; written to `datasets/raw_candidates/assistant_done_10k.jsonl` |
-| GEN-001 | T9 reverse-task rewrites | all four | Derived | PLANNED | ~5k-10k | Inputs = RAW-001; targets = Stripe/Linear/Fly.io/editorial rewrites |
+| SRC-010 | HF bucket claude-fable-5-claude-code-bucket | CLI developer engineering | **PRIVATE/OPERATOR** | ACTIVE | 48 | 65 multi-turn interactive Claude Code CLI developer sessions |
+| SRC-011 | HF bucket fable-5-premium-bucket | coding benchmarks | **PRIVATE/OPERATOR** | ACTIVE | 110 | Claude Fable-5 & Opus agent benchmark sessions (validation & test parquets) |
+| SRC-012 | HF dataset nvidia/SWE-Hero-openhands-trajectories | software engineering agent | **CC-BY-4.0** | ACTIVE | 5,944 | 35k OpenHands SWE issue resolution traces; terminal `finish(message=...)` responses |
+| RAW-001 | Trace Concluding DONE Pool (`assistant_done_10k`) | engineering / agent prose | **COMPOSITE** | COMPLETE | 10,000 | Strict $\ge 500$ char cutoff; 5,944 openhands, 3,011 deepseek-v4-pro, 831 kimi-k3, 108 claude-fable-5, 106 frontier/bench; median 1,828 chars, mean 1,827 chars; zero noise; written to `datasets/raw_candidates/assistant_done_10k.parquet` (10.1 MB) and `.jsonl` (23.1 MB) |
+| GEN-001 | T9 reverse-task rewrites | all domains | Derived | IN PROGRESS | ~5k-10k | Inputs = RAW-001; targets = Stripe/Linear/Fly.io/Dan Luu rewrites generated via Gateway |
 
 ## Published artifacts
 

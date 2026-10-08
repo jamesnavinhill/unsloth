@@ -62,7 +62,10 @@ references/style_exemplars/
 
 ---
 
-## 3. Engineering Lore & Blogs
+## 3. Supplementary Engineering Reading (Archival Only — Not Used as Target Domain)
+
+> [!NOTE]
+> Training pairs for the humanizer model strictly target **Domain 1 (Technical Documentation)** and **Domain 2 (Changelogs & PR Notes)**. The essays below serve as general background style references, not prompt generation targets.
 
 | Author / Org | File | Key Style Profile |
 |---|---|---|

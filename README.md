@@ -1,10 +1,8 @@
 # Liquid AI LFM2.5-2.6B Humanizer
 
-A production-grade text-to-text humanizer fine-tuning pipeline for **`LiquidAI/LFM2.5-2.6B`** across four core prose domains:
-- **Blog** (casual, engaging, authentic cadence)
-- **Website Copy** (punchy, conversion-focused, direct)
-- **Documentation** (technical clarity, structured, concise)
-- **Short Story** (narrative voice, emotional resonance, sensory rhythm)
+A production-grade text-to-text humanizer fine-tuning pipeline for **`LiquidAI/LFM2.5-2.6B`** across two core engineering prose domains:
+- **Technical Documentation & Architecture Guides** (Stripe, Fly.io style — high precision, explicit parameter contracts, declarative mechanics)
+- **Changelogs, Release Notes & PR Summaries** (Linear style — active verbs, architectural causality, exact files/signatures touched)
 
 This repository serves as the single source of truth for orchestration across local development, Google Colab GPU training, Hugging Face Hub, Weights & Biases telemetry, and Agency Gateway inference.
 
@@ -22,7 +20,7 @@ This repository serves as the single source of truth for orchestration across lo
 | **Telemetry** | Weights & Biases | Entity: `navin_hill`, Project: `copyright`. Real-time step loss, tok/s throughput, and CU tracking. |
 | **Artifact Hub** | Hugging Face Hub | Repositories under `jamesnavinhill/lfm25-humanizer-*` for datasets, adapters, and merged weights. |
 
-For the complete technical specification, review [`plan.md`](file:///c:/Users/james/projects/labwork/unsloth/plan.md).
+For the complete technical specification, review [`docs/plan.md`](file:///c:/Users/james/projects/labwork/unsloth/docs/plan.md).
 
 ---
 
@@ -33,14 +31,17 @@ unsloth/
 ├── .agents/skills/      # HF CLI, Hugging Face Datasets, LLM Trainer skills
 ├── datasets/
 │   └── LEDGER.md        # Provenance and license ledger for all corpora
+├── docs/                # Single source of truth for all project documentation
+│   ├── CONNECTIONS.md   # Nominal integration directory and credential guides
+│   ├── ORCHESTRATION.md # Multi-surface workflow rules and fail-safe protocols
+│   ├── plan.md          # Execution plan v2 (locked decisions D1–D9)
+│   ├── STATE.md         # Live project dashboard (phase, runs, CU budget)
+│   └── TASKS.md         # Active task board (T1–T15)
 ├── notebooks/           # Colab training and verification notebooks
+├── references/          # Style exemplars and anti-slop specifications
 ├── runs/
 │   └── README.md        # Run contract: run.json, metrics.jsonl, notes.md
-├── CONNECTIONS.md       # Nominal integration directory and credential guides
-├── ORCHESTRATION.md     # Multi-surface workflow rules and fail-safe protocols
-├── plan.md              # Execution plan v2 (locked decisions D1–D9)
-├── STATE.md             # Live project dashboard (phase, runs, CU budget)
-├── TASKS.md             # Active task board (T1–T15)
+├── scripts/             # Extraction, pilot, and dataset generation pipelines
 ├── .env.example         # Environment template (secrets are strictly excluded)
 └── .gitignore           # Airtight exclusion of secrets and heavy binaries
 ```
@@ -61,15 +62,15 @@ cp .env.example .env
 
 ### 2. Verify Connections
 
-Review [`CONNECTIONS.md`](file:///c:/Users/james/projects/labwork/unsloth/CONNECTIONS.md) for full credentials, endpoints, and authentication guides for GitHub, Hugging Face, Weights & Biases, Kaggle, and the Agency Gateway.
+Review [`docs/CONNECTIONS.md`](file:///c:/Users/james/projects/labwork/unsloth/docs/CONNECTIONS.md) for full credentials, endpoints, and authentication guides for GitHub, Hugging Face, Weights & Biases, Kaggle, and the Agency Gateway.
 
 ### 3. Workflow Protocol
 
-Always check [`STATE.md`](file:///c:/Users/james/projects/labwork/unsloth/STATE.md) and [`TASKS.md`](file:///c:/Users/james/projects/labwork/unsloth/TASKS.md) before starting any run:
-1. **Claim** the task in `TASKS.md` (`IN PROGRESS`).
+Always check [`docs/STATE.md`](file:///c:/Users/james/projects/labwork/unsloth/docs/STATE.md) and [`docs/TASKS.md`](file:///c:/Users/james/projects/labwork/unsloth/docs/TASKS.md) before starting any run:
+1. **Claim** the task in `docs/TASKS.md` (`IN PROGRESS`).
 2. **Execute** under the run contract (`runs/<run-id>/` with `run.json`, `metrics.jsonl`, `notes.md`).
 3. **Record** throughput (tok/s), peak VRAM, and CU consumption.
-4. **Close out** the task and update `STATE.md`.
+4. **Close out** the task and update `docs/STATE.md`.
 
 ---
 

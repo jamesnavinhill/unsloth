@@ -243,23 +243,21 @@ add_code("""# Cell 6: Chat Template & System Prompts Character-for-Character Mat
 # Native ChatML format via apply_chat_template without double BOS.
 
 DOMAIN_SYSTEM_PROMPTS = {
-    "blog": "You are a professional essayist and blogger crafting natural, engaging, and authentic prose with human cadence.",
-    "website copy": "You are a direct, punchy copywriter crafting compelling, natural website copy free of corporate AI fluff.",
-    "documentation": "You are a technical documentation specialist writing clear, precise, and human-readable documentation.",
-    "short story": "You are an imaginative literary fiction writer with a rich narrative voice and natural sensory rhythm."
+    "tech_docs": "You are a Principal Systems Engineer writing technical documentation in the style of Stripe, Linear, and Fly.io. Provide high-precision clarity, explicit preconditions, clear mechanics, parameter contracts, and zero fluff.",
+    "changelogs": "You are a Principal Systems Engineer writing release notes and pull request summaries in the style of Linear and Stripe. Provide active verbs, concise architectural causality, exact files touched, and plain verification facts with zero corporate cheerleading."
 }
 
 def format_conversation(domain: str, ai_draft: str, human_target: str):
-    sys_prompt = DOMAIN_SYSTEM_PROMPTS.get(domain, DOMAIN_SYSTEM_PROMPTS["blog"])
+    sys_prompt = DOMAIN_SYSTEM_PROMPTS.get(domain, DOMAIN_SYSTEM_PROMPTS["tech_docs"])
     messages = [
         {"role": "system", "content": sys_prompt},
-        {"role": "user", "content": f"Rewrite the following text into authentic, human-styled {domain}:\\n\\n{ai_draft}"},
+        {"role": "user", "content": f"Rewrite the following raw agent output into clean {domain}:\\n\\n{ai_draft}"},
         {"role": "assistant", "content": human_target}
     ]
     return messages
 
 # Verification of template rendering
-test_msgs = format_conversation("blog", "In today's fast-paced digital world...", "The internet moves quickly.")
+test_msgs = format_conversation("changelogs", "Fixed the bug in managers.py", "## Fixed block counting in managers.py")
 rendered = tokenizer.apply_chat_template(test_msgs, tokenize=False, add_generation_prompt=False)
 if tokenizer.bos_token and rendered.startswith(tokenizer.bos_token):
     rendered = rendered[len(tokenizer.bos_token):]
@@ -275,32 +273,22 @@ add_code("""# Cell 7: Dataset Preparation (Smoke Dataset or Production Hub Datas
 from datasets import Dataset
 
 if SMOKE_MODE:
-    print("--- SMOKE MODE ACTIVE (10 Samples Across 4 Domains) ---")
+    print("--- SMOKE MODE ACTIVE (Engineering Docs & Changelogs) ---")
     smoke_samples = [
-        # Blog
-        ("blog", "Furthermore, it is crucial to delve deeply into the multifaceted realm of modern technology.",
-         "Let's talk about what modern tech actually does when nobody is pitching it to investors."),
-        ("blog", "In conclusion, navigating this ecosystem presents both challenges and opportunities for stakeholders.",
-         "Wrapping this up: the field is messy, but that's where things get interesting."),
-        ("blog", "Delving into the realm of productivity reveals a tapestry of interconnected habits.",
-         "Productivity isn't a puzzle you solve; it's just doing the boring work consistently."),
-        # Website copy
-        ("website copy", "Unlock seamless synergies with our cutting-edge AI-driven enterprise solution platform.",
-         "We build the backend so your team can ship twice as fast without breaking existing systems."),
-        ("website copy", "Elevate your customer journey to unprecedented heights utilizing our transformative suite.",
-         "Turn your visitors into repeat customers with simple, zero-friction checkouts."),
-        # Documentation
-        ("documentation", "It is important to remember that the aforementioned command must be executed with root privileges.",
-         "Run this command with sudo. Normal user accounts will fail with a permission error."),
-        ("documentation", "Ensure that the respective configuration parameters are properly delineated in the config file.",
-         "Set these three values in your config.yaml before starting the service."),
-        ("documentation", "In the event of an unexpected exception occurring, inspect the runtime logs diligently.",
-         "If the server crashes, check /var/log/app.log for the exact stack trace."),
-        # Short story
-        ("short story", "A palpable sense of foreboding permeated the air as John cautiously walked into the dark woods.",
-         "Pine needles snapped under John's boots. The wind had died down, and the trail was getting narrower."),
-        ("short story", "The luminescent moonlight cast an eerie glow upon the ancient, decrepit estate.",
-         "Moonlight cut across the broken porch steps, showing peel marks where white paint used to be.")
+        # Changelogs
+        ("changelogs",
+         "I have successfully implemented the necessary changes to fix the `digitize` function issue with the new `edge` keyword argument. The dispatcher wasn't updated to handle this additional argument.",
+         "**Fix `digitize` dispatcher signature for new `edge` parameter**\\n\\nUpdated `_digitize_dispatcher` and `digitize` signatures in `numpy/lib/function_base.py` to include `edge=None` and `edge=False` respectively."),
+        ("changelogs",
+         "The `unique()` function in pandas now preserves the input dtype for narrow numeric types instead of converting them to wider types. Modified line 399 in algorithms.py.",
+         "`unique()` now preserves the input dtype for narrow numeric types.\\n\\nThe call in `pandas/core/algorithms.py:399` now passes `original.dtype` directly, so reconstruction respects the source array's precision."),
+        # Tech Docs
+        ("tech_docs",
+         "Both DataFrame.explode() and Series.explode() accept an ignore_index parameter that controls the index of the result.",
+         "# `ignore_index` parameter for `DataFrame.explode()` and `Series.explode()`\\n\\nBoth `DataFrame.explode()` and `Series.explode()` accept an `ignore_index` parameter that controls whether the result preserves existing index labels or resets to a sequential integer index."),
+        ("tech_docs",
+         "The API supports idempotency for safely retrying requests without accidentally performing the same operation twice.",
+         "# Idempotent Requests\\n\\nThe API supports idempotency for safely retrying requests without accidentally performing the same operation twice. When creating or updating an object, pass an idempotency key.")
     ]
     
     rows = []
@@ -428,27 +416,25 @@ print("[✓ CELL 9 COMPLETE] ─── Ready for Cell 10 (Inference Verification
 print("="*50)
 """)
 
-add_code("""# Cell 10: In-Notebook Generation Check (All 4 Domains)
+add_code("""# Cell 10: In-Notebook Generation Check (Domains 1 & 2)
 FastLanguageModel.for_inference(model)
 
 test_prompts = [
-    ("blog", "In today's fast-paced technological ecosystem, it is vital to remember the importance of mindfulness."),
-    ("website copy", "Our transformative enterprise synergy platform seamlessly optimizes workflow throughput."),
-    ("documentation", "Prior to initializing the subsystem, verify that the environment parameters are appropriately configured."),
-    ("short story", "A chilling aura of suspense blanketed the ancient mansion as Sarah turned the rusty doorknob.")
+    ("changelogs", "## Summary\\n\\nI have successfully implemented the necessary changes to fix the `digitize` function issue with the new `edge` keyword argument. The dispatcher was not updated to handle this additional argument, causing a TypeError."),
+    ("tech_docs", "Both DataFrame.explode() and Series.explode() accept an ignore_index parameter that controls the index of the result.")
 ]
 
 print("\\n--- MODEL COMPLETION VERIFICATION (POST-SMOKE) ---")
 for domain, prompt_text in test_prompts:
     conv = [
         {"role": "system", "content": DOMAIN_SYSTEM_PROMPTS[domain]},
-        {"role": "user", "content": f"Rewrite the following text into authentic, human-styled {domain}:\\n\\n{prompt_text}"}
+        {"role": "user", "content": f"Rewrite the following raw agent output into clean {domain}:\\n\\n{prompt_text}"}
     ]
     inputs = tokenizer.apply_chat_template(conv, tokenize=True, add_generation_prompt=True, return_tensors="pt").to("cuda")
-    outputs = model.generate(input_ids=inputs, max_new_tokens=128, temperature=0.2, top_k=50)
+    outputs = model.generate(input_ids=inputs, max_new_tokens=1024)
     gen_text = tokenizer.decode(outputs[0][inputs.shape[1]:], skip_special_tokens=True)
-    print(f"\\n[{domain.upper()}] Input:  {prompt_text}")
-    print(f"[{domain.upper()}] Output: {gen_text.strip()}")
+    print(f"\\n[{domain.upper()}] Input:\\n{prompt_text}")
+    print(f"\\n[{domain.upper()}] Output:\\n{gen_text.strip()}\\n" + "-"*50)
 
 print("\\n" + "="*50)
 print("[✓ CELL 10 COMPLETE] ─── Ready for Cell 11 (CU Stop & Record)")
